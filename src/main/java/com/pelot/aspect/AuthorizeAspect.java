@@ -11,6 +11,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,11 +31,17 @@ public class AuthorizeAspect {
 
     // 定义切面,拦截出用户登录外的请求
     @Pointcut("execution(public * com.pelot.controller.admin.*.*(..))"
-        + "&&!execution(public * com.pelot.controller.admin.AdminUserAutoController.*(..))")
+        + "&&!execution(public * com.pelot.controller.admin.AdminUserAuthController.*(..))")
     public void verify(){}
 
     @Before(value = "verify()")
     public void doVerify(){
-
+        //获取cookie
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        //获取session
+//        String sessionId = attributes.getSessionId();
+//        if(StringUtils.isEmpty(sessionId)){
+//
+//        }
     }
 }

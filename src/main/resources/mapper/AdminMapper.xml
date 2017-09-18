@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pelot.mapper.admin.AdminMapper">
+    <select id="login"  resultType="com.pelot.mapper.admin.dataobject.AdminInfo" parameterType="com.pelot.mapper.admin.query.AdminLoginPO">
+        SELECT * from user_admin_info WHERE username = #{username} and password = #{pwd}
+    </select>
+</mapper>

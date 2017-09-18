@@ -7,10 +7,15 @@
  */
 package com.pelot.controller.admin;
 
+import com.pelot.mapper.admin.AdminMapper;
+import com.pelot.service.admin.AdminUserAuthService;
+
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +30,10 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/admin")
-public class AdminUserAutoController {
+public class AdminUserAuthController {
+
+    @Autowired
+    private AdminUserAuthService adminUserAuthService;
 
     /**
      * 登录
