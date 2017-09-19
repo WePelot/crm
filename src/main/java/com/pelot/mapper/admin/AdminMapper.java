@@ -8,7 +8,10 @@
 package com.pelot.mapper.admin;
 
 import com.pelot.mapper.admin.dataobject.AdminInfo;
+import com.pelot.mapper.admin.dataobject.SalesManInfo;
 import com.pelot.mapper.admin.query.AdminLoginPO;
+
+import java.util.List;
 
 /**
  * 管理员mapper
@@ -17,7 +20,6 @@ import com.pelot.mapper.admin.query.AdminLoginPO;
  * @version V1.0
  * @since 2017-09-18 16:37
  */
-//@Component
 public interface AdminMapper {
     /**
      * 管理员登录
@@ -25,5 +27,12 @@ public interface AdminMapper {
      * @param po
      * @return
      */
-    public AdminInfo login(AdminLoginPO po);
+    AdminInfo login(AdminLoginPO po);
+
+    /**
+     * 销售人员列表
+     *
+     * @return
+     */
+    List<SalesManInfo> list();
 }
