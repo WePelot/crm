@@ -59,15 +59,13 @@ public class AdminUserAuthController {
         //1.判断用户名和密码是否正确
         AdminInfo adminInfo = adminUserAuthService.login(new AdminLoginPO(username, password));
         if (Objects.nonNull(adminInfo)) {
-            //用户名和密码正确，转入增加销售人员的界面
-
             //2.写入cookie
             String token = UUID.randomUUID().toString();
             //3. 将token写入cookie
             CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
 
-            //3.设置成功后跳转列表页
-            return new ModelAndView();
+            //3.设置成功后跳转增加销售人员列表的界面
+            return new ModelAndView("admin/salesman_list");
         } else {
             //用户名和密码不正确，转入错误页面
 
