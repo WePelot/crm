@@ -7,11 +7,18 @@
  */
 package com.pelot.aspect;
 
+import com.pelot.constant.CookieConstant;
+import com.pelot.enums.ResultEnum;
+import com.pelot.exception.CrmAuthorizeException;
+import com.pelot.utils.CookieUtil;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -38,10 +45,12 @@ public class AuthorizeAspect {
     public void doVerify(){
         //获取cookie
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
         //获取session
-//        String sessionId = attributes.getSessionId();
-//        if(StringUtils.isEmpty(sessionId)){
-//
-//        }
+        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN);
+        if (cookie == null) {
+            log.warn("【登录校验】Cookie中查不到token");
+            throw new CrmAuthorizeException(ResultEnum.NOT_LOGIN);
+        }
     }
 }

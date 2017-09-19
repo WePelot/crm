@@ -8,6 +8,8 @@
 package com.pelot.service.admin;
 
 import com.pelot.mapper.admin.AdminMapper;
+import com.pelot.mapper.admin.dataobject.AdminInfo;
+import com.pelot.mapper.admin.query.AdminLoginPO;
 
 import javax.annotation.Resource;
 
@@ -25,4 +27,7 @@ public class AdminUserAuthService {
     @Resource
     private AdminMapper adminMapper;
 
+    public AdminInfo login(AdminLoginPO po) {
+        return adminMapper.login(po);
+    }
 }

@@ -7,15 +7,24 @@
  */
 package com.pelot.controller.admin;
 
-import com.pelot.mapper.admin.AdminMapper;
+import com.pelot.constant.CookieConstant;
+import com.pelot.enums.ResultEnum;
+import com.pelot.mapper.admin.dataobject.AdminInfo;
+import com.pelot.mapper.admin.query.AdminLoginPO;
 import com.pelot.service.admin.AdminUserAuthService;
+import com.pelot.utils.CookieUtil;
 
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
-import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,18 +47,48 @@ public class AdminUserAuthController {
     /**
      * 登录
      * @param username
-     * @param pwd
+     * @param password
      * @param response
      * @param map
      * @return
      */
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ModelAndView login(@RequestParam(value = "username", required = false) String username,
-        @RequestParam(value = "pwd", required = false) String pwd,
+        @RequestParam(value = "password", required = false) String password,
         HttpServletResponse response,Map<String,Object> map){
         //1.判断用户名和密码是否正确
-        //2.写入cookie
-        //3.设置成功后跳转列表页
-        return new ModelAndView();
+        AdminInfo adminInfo = adminUserAuthService.login(new AdminLoginPO(username, password));
+        if (Objects.nonNull(adminInfo)) {
+            //用户名和密码正确，转入增加销售人员的界面
+
+            //2.写入cookie
+            String token = UUID.randomUUID().toString();
+            //3. 将token写入cookie
+            CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
+
+            //3.设置成功后跳转列表页
+            return new ModelAndView();
+        } else {
+            //用户名和密码不正确，转入错误页面
+
+            //设置失败后跳转列表页
+            map.put("errorMsg", ResultEnum.LOGIN_FAIL.getMsg());
+            map.put("redirectUrl", "/html/admin/index.html");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
+        //1. 从cookie里查询,获取token
+        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN);
+        if (Objects.nonNull(cookie)) {
+            //2. 清除cookie里的token信息
+            CookieUtil.set(response, CookieConstant.TOKEN, null, 0);
+        }
+        //4.清除成功后跳转成功界面
+        map.put("errorMsg", ResultEnum.LOGOUT_SUCCESS.getMsg());
+        map.put("redirectUrl", "/html/admin/index.html");
+        return new ModelAndView("common/success", map);
     }
 }

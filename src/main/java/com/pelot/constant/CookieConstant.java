@@ -5,25 +5,15 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with GuaHao.com.
  */
-package com.pelot.mapper.admin.query;
-
-import lombok.Data;
+package com.pelot.constant;
 
 /**
- * 管理员登录po
- *
  * @author hongcj
  * @version V1.0
- * @since 2017-09-18 17:04
+ * @since 2017-08-21 15:06
  */
-@Data
-public class AdminLoginPO {
-    private String username;
+public class CookieConstant {
+    public static final String TOKEN = "token";
 
-    private String password;
-
-    public AdminLoginPO(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    public static final Integer EXPIRE = 7200; //默认过期时间设置为2小时
 }
