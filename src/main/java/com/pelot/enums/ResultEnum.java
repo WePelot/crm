@@ -24,7 +24,12 @@ public enum ResultEnum {
 
     LOGOUT_SUCCESS(3, "登出成功"),
 
-    NOT_LOGIN(4, "管理员未进行登录");
+    NOT_LOGIN(4, "管理员未进行登录"),
+
+    SALESMANINFO_ADD_CHG_FAIL(5, "新增或修改销售人员信息失败"),
+
+    SALESMANINFO_NOT_EXIST(6, "该销售人员已不存在");
+
 
     private Integer code;
 

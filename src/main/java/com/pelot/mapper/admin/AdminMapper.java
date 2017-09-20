@@ -7,8 +7,9 @@
  */
 package com.pelot.mapper.admin;
 
+import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.mapper.admin.dataobject.AdminInfo;
-import com.pelot.mapper.admin.dataobject.SalesManInfo;
+import com.pelot.mapper.admin.dataobject.SalesmanInfo;
 import com.pelot.mapper.admin.query.AdminLoginPO;
 
 import java.util.List;
@@ -34,5 +35,29 @@ public interface AdminMapper {
      *
      * @return
      */
-    List<SalesManInfo> list();
+    List<SalesmanInfo> list();
+
+    /**
+     * 增加销售人员
+     *
+     * @param infoForm
+     * @return
+     */
+    SalesmanInfo add(SalesmanInfoForm infoForm);
+
+    /**
+     * 修改销售人员信息
+     *
+     * @param infoForm
+     * @return
+     */
+    SalesmanInfo chg(SalesmanInfoForm infoForm);
+
+    /**
+     * 根据id获取销售人员信息
+     *
+     * @param id
+     * @return
+     */
+    SalesmanInfo getSalesmanById(String id);
 }

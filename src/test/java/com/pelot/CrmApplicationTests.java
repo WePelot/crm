@@ -11,6 +11,7 @@ public class CrmApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		System.out.println("iPone".equals("iPhone; CPU"));
 	}
 
 }

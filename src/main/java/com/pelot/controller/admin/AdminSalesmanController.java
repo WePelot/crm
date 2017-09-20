@@ -7,9 +7,10 @@
  */
 package com.pelot.controller.admin;
 
-import com.pelot.form.admin.SalesManInfoForm;
-import com.pelot.mapper.admin.AdminMapper;
-import com.pelot.mapper.admin.dataobject.SalesManInfo;
+import com.pelot.exception.SalesmanException;
+import com.pelot.form.admin.SalesmanInfoForm;
+import com.pelot.manage.AdminManage;
+import com.pelot.mapper.admin.dataobject.SalesmanInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,10 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -31,7 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/admin/salesman")
 public class AdminSalesmanController {
     @Resource
-    public AdminMapper adminMapper;
+    public AdminManage adminManage;
 
     /**
      * 获取销售人员列表集合
@@ -40,13 +43,49 @@ public class AdminSalesmanController {
      */
     @PostMapping("/list")
     public ModelAndView list(Map<String, Object> map) {
-        List<SalesManInfo> list = adminMapper.list();
+        List<SalesmanInfo> list = adminManage.list();
         map.put("list", list);
         return new ModelAndView("admin/salesman_list");
     }
 
-    @PostMapping("/add")
-    public ModelAndView add(@Valid SalesManInfoForm info) {
-        return new ModelAndView();
+    /**
+     * 新增或修改销售人员信息
+     *
+     * @param info
+     * @param map
+     * @return
+     */
+    @PostMapping("/save")
+    public ModelAndView save(@Valid SalesmanInfoForm info, Map<String, Object> map) {
+        try {
+            SalesmanInfo salesManInfo = null;
+            if (StringUtils.isEmpty(info.getId())) {
+                //为空说明是修改是新增
+                salesManInfo = adminManage.add(info);
+            } else {
+                salesManInfo = adminManage.chg(info);
+            }
+            map.put("salesManInfo", salesManInfo);
+            return new ModelAndView("admin/salesman_detail", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "admin/salesman_list");
+            return new ModelAndView("common/error", map);
+        }
+
+    }
+
+    @PostMapping("/index")
+    public ModelAndView index(@RequestParam String id, Map<String, Object> map) {
+        try {
+            SalesmanInfo salesManInfo = adminManage.getSalesmanById(id);
+            map.put("salesManInfo", salesManInfo);
+            return new ModelAndView("admin/salesman_detail", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "admin/salesman_list");
+            return new ModelAndView("common/error", map);
+        }
+
     }
 }

@@ -7,10 +7,29 @@
  */
 package com.pelot.form.admin;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import lombok.Data;
+
 /**
  * @author hongcj
  * @version V1.0
  * @since 2017-09-19 19:31
  */
-public class SalesManInfoForm {
+
+@Data
+public class SalesmanInfoForm {
+
+    private String id;
+
+    @NotEmpty(message = "姓名不能为空")
+    private String username;
+
+    @NotEmpty(message = "密码不能为空")
+    private String password;
+
+    /**
+     * 是否为销售组长，1为是，0为否，默认为否
+     */
+    private Integer flag = new Integer(0);
 }

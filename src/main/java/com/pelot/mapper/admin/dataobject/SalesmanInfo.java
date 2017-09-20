@@ -17,7 +17,7 @@ import lombok.Data;
  * @since 2017-09-19 19:00
  */
 @Data
-public class SalesManInfo {
+public class SalesmanInfo {
 
     private String id;
 
