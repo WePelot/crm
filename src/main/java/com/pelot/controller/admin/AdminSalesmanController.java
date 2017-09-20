@@ -12,21 +12,19 @@ import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.manage.AdminManage;
 import com.pelot.mapper.admin.dataobject.SalesmanInfo;
 import com.pelot.mapper.common.PagePO;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.validation.Valid;
-
+import com.pelot.mapper.common.PageQuery;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author hongcj
@@ -45,10 +43,11 @@ public class AdminSalesmanController {
      * @return
      */
     @GetMapping("/list")
-    public ModelAndView list(@RequestBody PagePO po, Map<String, Object> map) {
-        List<SalesmanInfo> list = adminManage.list(po);
-        map.put("list", list);
-        return new ModelAndView("admin/salesman_list", map);
+    public ModelAndView list(PagePO po) {
+        PageQuery<SalesmanInfo> list = adminManage.list(po);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list",list);
+        return new ModelAndView("admin/salesman_list",map);
     }
 
     /**
@@ -78,8 +77,8 @@ public class AdminSalesmanController {
 
     }
 
-    @GetMapping("/index")
-    public ModelAndView index(@RequestParam String id, Map<String, Object> map) {
+    @GetMapping("/detail")
+    public ModelAndView detail(@RequestParam String id, Map<String, Object> map) {
         try {
             SalesmanInfo salesManInfo = adminManage.getSalesmanById(id);
             map.put("salesManInfo", salesManInfo);
@@ -89,6 +88,21 @@ public class AdminSalesmanController {
             map.put("redirectUrl", "admin/salesman_list");
             return new ModelAndView("common/error", map);
         }
+    }
 
+
+    @GetMapping("/del")
+    public ModelAndView del(@RequestParam String id, Map<String, Object> map) {
+        try {
+            SalesmanInfo salesManInfo = adminManage.getSalesmanById(id);
+            adminManage.delSalesmanById(salesManInfo.getId());
+            map.put("errorMsg", "删除成功");
+            map.put("redirectUrl", "admin/salesman_list");
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "admin/salesman_list");
+            return new ModelAndView("common/error", map);
+        }
     }
 }

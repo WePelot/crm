@@ -62,7 +62,7 @@ public class AdminUserAuthController {
             //2.写入cookie
             String token = UUID.randomUUID().toString();
             //3. 将token写入cookie
-            CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
+            CookieUtil.set(response, CookieConstant.TOKEN_ADMIN, token, CookieConstant.EXPIRE);
 
             //3.设置成功后跳转增加销售人员列表的界面
             return new ModelAndView("admin/salesman_list");
@@ -79,10 +79,10 @@ public class AdminUserAuthController {
     @GetMapping("/logout")
     public ModelAndView logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
         //1. 从cookie里查询,获取token
-        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN);
+        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN_ADMIN);
         if (Objects.nonNull(cookie)) {
             //2. 清除cookie里的token信息
-            CookieUtil.set(response, CookieConstant.TOKEN, null, 0);
+            CookieUtil.set(response, CookieConstant.TOKEN_ADMIN, null, 0);
         }
         //4.清除成功后跳转成功界面
         map.put("errorMsg", ResultEnum.LOGOUT_SUCCESS.getMsg());

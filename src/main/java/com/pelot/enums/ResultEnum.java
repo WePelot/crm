@@ -28,7 +28,9 @@ public enum ResultEnum {
 
     SALESMANINFO_ADD_CHG_FAIL(5, "新增或修改销售人员信息失败"),
 
-    SALESMANINFO_NOT_EXIST(6, "该销售人员已不存在");
+    SALESMANINFO_NOT_EXIST(6, "该销售人员已不存在"),
+
+    SALESMANINFO_DEL_FAIL(7,"删除销售人员失败");
 
 
     private Integer code;

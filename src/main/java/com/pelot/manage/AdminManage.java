@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Component;
  * @since 2017-09-20 15:41
  */
 @Component
+@Slf4j
 public class AdminManage {
 
     @Resource
@@ -94,5 +96,14 @@ public class AdminManage {
             return result;
         }
         throw new SalesmanException(ResultEnum.SALESMANINFO_NOT_EXIST);
+    }
+
+    public void delSalesmanById(String id) {
+        try{
+            adminMapper.delSalesmanById(id);
+        }catch (Exception e){
+            log.error("删除销售人员失败,id={},excetpion={}",id,e);
+            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
+        }
     }
 }

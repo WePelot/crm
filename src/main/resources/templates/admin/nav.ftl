@@ -6,7 +6,7 @@
             </a>
         </li>
         <li>
-            <a href="/admin/salesman/list"><i class="fa fa-fw fa-list-alt"></i>销售人员列表</a>
+            <a href="/admin/salesman/list?pageNo=1&pageSize=20"><i class="fa fa-fw fa-list-alt"></i>销售人员列表</a>
         </li>
         <li class="dropdown open">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true"><i class="fa fa-fw fa-plus"></i> 商品 <span class="caret"></span></a>

@@ -5,7 +5,11 @@
         SELECT * from user_admin_info WHERE username = #{username} and password = #{password}
     </select>
 
-    <select id="list" resultType="com.pelot.mapper.admin.dataobject.SalesmanInfo" parameterType="com.pelot.mapper.common.PageCommonPO">
-        SELECT * from saleman_info limit #{pageNo} * #{}
+    <select id="salesmanInfolist" resultType="com.pelot.mapper.admin.dataobject.SalesmanInfo" parameterType="com.pelot.mapper.common.PagePO">
+        SELECT * from saleman_info limit #{start}, #{pageSize}
+    </select>
+
+    <select id="salesmanInfolistCount" resultType="java.lang.Integer" parameterType="com.pelot.mapper.common.PagePO">
+        SELECT COUNT(*) from saleman_info limit #{start}, #{pageSize}
     </select>
 </mapper>

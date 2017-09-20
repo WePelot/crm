@@ -28,8 +28,15 @@ public class SalesmanInfoForm {
     @NotEmpty(message = "密码不能为空")
     private String password;
 
-    /**
-     * 是否为销售组长，1为是，0为否，默认为否
-     */
+    @NotEmpty(message = "姓名不能为空")
+    private String name;
+
+    @NotEmpty(message = "联系号码不能为空")
+    private String phone;
+
+    @NotEmpty(message = "地址不能为空")
+    private String address;
+
+    //身份，默认为普通销售人员
     private Integer flag = new Integer(0);
 }

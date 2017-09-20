@@ -34,4 +34,17 @@ public class PageQuery<T> {
      */
     private int totalCount;
 
+    /**
+     * 获取总页数
+     * @return
+     */
+    public int getTotalPage(){
+        if (getTotalCount() % getTotalPage() == 0) {
+            return getTotalCount() % getTotalPage();
+        } else {
+            return getTotalCount() % getTotalPage() + 1;
+        }
+    }
+
+
 }

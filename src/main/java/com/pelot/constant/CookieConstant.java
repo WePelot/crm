@@ -13,7 +13,8 @@ package com.pelot.constant;
  * @since 2017-08-21 15:06
  */
 public class CookieConstant {
-    public static final String TOKEN = "token";
+    //管理员的token
+    public static final String TOKEN_ADMIN = "token_admin";
 
     public static final Integer EXPIRE = 7200; //默认过期时间设置为2小时
 }

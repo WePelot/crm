@@ -69,4 +69,11 @@ public interface AdminMapper {
      * @return
      */
     Integer salesmanInfolistCount(PagePO po);
+
+    /**
+     * 根据id删除人员
+     * @param id
+     * @return
+     */
+    void delSalesmanById(String id);
 }

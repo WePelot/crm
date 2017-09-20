@@ -46,8 +46,7 @@ public class AuthorizeAspect {
         //获取cookie
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        //获取session
-        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN);
+        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN_ADMIN);
         if (cookie == null) {
             log.warn("【登录校验】Cookie中查不到token");
             throw new CrmAuthorizeException(ResultEnum.NOT_LOGIN);
