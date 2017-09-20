@@ -14,8 +14,10 @@ import com.pelot.mapper.admin.AdminMapper;
 import com.pelot.mapper.admin.dataobject.AdminInfo;
 import com.pelot.mapper.admin.dataobject.SalesmanInfo;
 import com.pelot.mapper.admin.query.AdminLoginPO;
+import com.pelot.mapper.common.PagePO;
+import com.pelot.mapper.common.PageQuery;
+import com.pelot.mapper.common.PageResolve;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.Resource;
@@ -44,12 +46,12 @@ public class AdminManage {
     }
 
     /**
-     * 销售人员列表
+     * 分页销售人员列表
      *
      * @return
      */
-    public List<SalesmanInfo> list() {
-        return adminMapper.list();
+    public PageQuery<SalesmanInfo> list(PagePO po) {
+        return PageResolve.page(po, c -> adminMapper.salesmanInfolistCount(po), l -> adminMapper.salesmanInfolist(po));
     }
 
     /**
@@ -59,7 +61,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo add(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = adminMapper.add(infoForm);
+        SalesmanInfo result = adminMapper.addSalesmanInfo(infoForm);
         if (Objects.nonNull(result)) {
             return result;
         }
@@ -73,7 +75,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo chg(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = adminMapper.chg(infoForm);
+        SalesmanInfo result = adminMapper.chgSalesmanInfo(infoForm);
         if (Objects.nonNull(result)) {
             return result;
         }
@@ -87,7 +89,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo getSalesmanById(String id) {
-        SalesmanInfo result = adminMapper.getSalesmanById(id);
+        SalesmanInfo result = adminMapper.getSalesmanInfoById(id);
         if (Objects.nonNull(result)) {
             return result;
         }
