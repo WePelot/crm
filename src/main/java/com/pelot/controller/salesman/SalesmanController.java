@@ -1,18 +1,11 @@
-/*
- * Copyright (c) 2001-2017 GuaHao.com Corporation Limited. All rights reserved. 
- * This software is the confidential and proprietary information of GuaHao Company. 
- * ("Confidential Information"). 
- * You shall not disclose such Confidential Information and shall use it only 
- * in accordance with the terms of the license agreement you entered into with GuaHao.com.
- */
-package com.pelot.controller.admin;
+package com.pelot.controller.salesman;
 
 import com.pelot.exception.SalesmanException;
 import com.pelot.form.admin.SalesmanInfoForm;
-import com.pelot.manage.AdminManage;
-import com.pelot.mapper.admin.dataobject.SalesmanInfo;
-import com.pelot.mapper.common.PagePO;
 import com.pelot.mapper.common.PageQuery;
+import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.SalesmanListPagePO;
+import com.pelot.service.salesman.SalesmanService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,15 +20,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 销售人员的操作控制
  * @author hongcj
  * @version V1.0
  * @since 2017-09-19 18:59
  */
 @Controller
-@RequestMapping("/admin/salesman")
-public class AdminSalesmanController {
+@RequestMapping("/salesman")
+public class SalesmanController {
     @Resource
-    public AdminManage adminManage;
+    public SalesmanService salesmanService;
 
     /**
      * 获取销售人员列表集合
@@ -43,11 +37,11 @@ public class AdminSalesmanController {
      * @return
      */
     @GetMapping("/list")
-    public ModelAndView list(PagePO po) {
-        PageQuery<SalesmanInfo> list = adminManage.list(po);
+    public ModelAndView list(SalesmanListPagePO po) {
+        PageQuery<SalesmanInfo> list = salesmanService.list(po);
         Map<String, Object> map = new HashMap<>();
         map.put("list",list);
-        return new ModelAndView("admin/salesman_list",map);
+        return new ModelAndView("salesman/salesman_list", map);
     }
 
     /**
@@ -63,29 +57,34 @@ public class AdminSalesmanController {
             SalesmanInfo salesManInfo = null;
             if (StringUtils.isEmpty(info.getId())) {
                 //为空说明是修改是新增
-                salesManInfo = adminManage.add(info);
+                salesManInfo = salesmanService.add(info);
             } else {
-                salesManInfo = adminManage.chg(info);
+                salesManInfo = salesmanService.chg(info);
             }
             map.put("salesManInfo", salesManInfo);
-            return new ModelAndView("admin/salesman_detail", map);
+            return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "admin/salesman_list");
+            map.put("redirectUrl", "salesman/salesman_list");
             return new ModelAndView("common/error", map);
         }
 
     }
 
+    /**
+     * @param id
+     * @param map
+     * @return
+     */
     @GetMapping("/detail")
     public ModelAndView detail(@RequestParam String id, Map<String, Object> map) {
         try {
-            SalesmanInfo salesManInfo = adminManage.getSalesmanById(id);
+            SalesmanInfo salesManInfo = salesmanService.getSalesmanById(id);
             map.put("salesManInfo", salesManInfo);
-            return new ModelAndView("admin/salesman_detail", map);
+            return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "admin/salesman_list");
+            map.put("redirectUrl", "salesman/salesman_list");
             return new ModelAndView("common/error", map);
         }
     }
@@ -94,8 +93,8 @@ public class AdminSalesmanController {
     @GetMapping("/del")
     public ModelAndView del(@RequestParam String id, Map<String, Object> map) {
         try {
-            SalesmanInfo salesManInfo = adminManage.getSalesmanById(id);
-            adminManage.delSalesmanById(salesManInfo.getId());
+            SalesmanInfo salesManInfo = salesmanService.getSalesmanById(id);
+            salesmanService.delSalesmanById(salesManInfo.getId());
             map.put("errorMsg", "删除成功");
             map.put("redirectUrl", "admin/salesman_list");
             return new ModelAndView("common/success", map);

@@ -5,13 +5,13 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with GuaHao.com.
  */
-package com.pelot.mapper.admin;
+package com.pelot.mapper.salesman;
 
 import com.pelot.form.admin.SalesmanInfoForm;
-import com.pelot.mapper.admin.dataobject.AdminInfo;
-import com.pelot.mapper.admin.dataobject.SalesmanInfo;
-import com.pelot.mapper.admin.query.AdminLoginPO;
 import com.pelot.mapper.common.PagePO;
+import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.SalesmanListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 
 import java.util.List;
 
@@ -22,14 +22,14 @@ import java.util.List;
  * @version V1.0
  * @since 2017-09-18 16:37
  */
-public interface AdminMapper {
+public interface SalesmanMapper {
     /**
      * 管理员登录
      *
      * @param po
      * @return
      */
-    AdminInfo login(AdminLoginPO po);
+    SalesmanInfo login(SalesmanLoginPO po);
 
     /**
      * 销售人员列表
@@ -68,7 +68,7 @@ public interface AdminMapper {
      * @param po
      * @return
      */
-    Integer salesmanInfolistCount(PagePO po);
+    Integer salesmanInfolistCount(SalesmanListPagePO po);
 
     /**
      * 根据id删除人员

@@ -8,7 +8,6 @@
 package com.pelot.handle;
 
 import com.pelot.exception.CrmAuthorizeException;
-
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +23,6 @@ public class CrmAuthorizeExceptionHandle {
     //处理权限异常
     @ExceptionHandler(value = CrmAuthorizeException.class)
     public ModelAndView handleException() {
-        return new ModelAndView("/html/admin/index.html");
+        return new ModelAndView("/html/admin/login.html");
     }
 }

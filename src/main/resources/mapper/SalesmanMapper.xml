@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pelot.mapper.salesman.SalesmanMapper">
+    <select id="login" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo"
+            parameterType="com.pelot.mapper.salesman.query.SalesmanLoginPO">
+        SELECT * from salesman_info WHERE username = #{username} and password = #{password}
+    </select>
+
+    <select id="salesmanInfolist" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo"
+            parameterType="com.pelot.mapper.salesman.query.SalesmanListPagePO">
+        SELECT * from salesman_info
+        <where>
+            deleted = 0
+            <if test="identity=1">
+                -- 销售组长，可以查看自己的信息和自己手下销售的信息
+                and identity = #{identity} AND id = #{salesmanId}
+            </if>
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="salesmanInfolistCount" resultType="java.lang.Integer"
+            parameterType="com.pelot.mapper.salesman.query.SalesmanListPagePO">
+        SELECT COUNT(*) from salesman_info
+        <where>
+            deleted = 0
+            <if test="identity=1">
+                -- 销售组长，可以查看自己的信息和自己手下销售的信息
+                and identity = #{identity} AND id = #{salesmanId}
+            </if>
+        </where>
+        limit #{start}, #{pageSize}
+    </select>
+</mapper>

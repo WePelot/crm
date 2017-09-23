@@ -5,7 +5,7 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with GuaHao.com.
  */
-package com.pelot.mapper.admin.dataobject;
+package com.pelot.mapper.salesman.dataobject;
 
 import lombok.Data;
 
@@ -49,7 +49,7 @@ public class SalesmanInfo {
     /**
      * 身份，0为普通销售，1为销售组长，2为总负责人
      */
-    private Integer flag = new Integer(0);
+    private Integer identity = new Integer(0);
 
     /**
      * 是否被删除，0为未删除，1为已删除

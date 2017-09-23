@@ -37,8 +37,8 @@ public class AuthorizeAspect {
 
 
     // 定义切面,拦截出用户登录外的请求
-    @Pointcut("execution(public * com.pelot.controller.admin.*.*(..))"
-        + "&&!execution(public * com.pelot.controller.admin.AdminUserAuthController.*(..))")
+    @Pointcut("execution(public * com.pelot.controller.salesman.*.*(..))"
+        + "&&!execution(public * com.pelot.controller.salesman.SalesmanLoginController.*(..))")
     public void verify(){}
 
     @Before(value = "verify()")
@@ -46,7 +46,7 @@ public class AuthorizeAspect {
         //获取cookie
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN_ADMIN);
+        Cookie cookie = CookieUtil.get(request, CookieConstant.TOKEN);
         if (cookie == null) {
             log.warn("【登录校验】Cookie中查不到token");
             throw new CrmAuthorizeException(ResultEnum.NOT_LOGIN);

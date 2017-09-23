@@ -3,7 +3,7 @@
 <body>
 <div id="wrapper" class="toggled">
     <#--边栏sidebar-->
-    <#include "../admin/nav.ftl">
+    <#include "../salesman/nav.ftl">
 
     <#--主要内容content-->
     <div id="page-content-wrapper">

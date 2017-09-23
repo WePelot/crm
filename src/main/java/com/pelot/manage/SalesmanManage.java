@@ -10,20 +10,17 @@ package com.pelot.manage;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
 import com.pelot.form.admin.SalesmanInfoForm;
-import com.pelot.mapper.admin.AdminMapper;
-import com.pelot.mapper.admin.dataobject.AdminInfo;
-import com.pelot.mapper.admin.dataobject.SalesmanInfo;
-import com.pelot.mapper.admin.query.AdminLoginPO;
-import com.pelot.mapper.common.PagePO;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.common.PageResolve;
-
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
+import com.pelot.mapper.salesman.SalesmanMapper;
+import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.SalesmanListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * @author hongcj
@@ -32,10 +29,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class AdminManage {
+public class SalesmanManage {
 
     @Resource
-    private AdminMapper adminMapper;
+    private SalesmanMapper salesmanMapper;
 
     /**
      * 管理员登录
@@ -43,8 +40,8 @@ public class AdminManage {
      * @param po
      * @return
      */
-    public AdminInfo login(AdminLoginPO po) {
-        return adminMapper.login(po);
+    public SalesmanInfo login(SalesmanLoginPO po) {
+        return salesmanMapper.login(po);
     }
 
     /**
@@ -52,8 +49,8 @@ public class AdminManage {
      *
      * @return
      */
-    public PageQuery<SalesmanInfo> list(PagePO po) {
-        return PageResolve.page(po, c -> adminMapper.salesmanInfolistCount(po), l -> adminMapper.salesmanInfolist(po));
+    public PageQuery<SalesmanInfo> list(SalesmanListPagePO po) {
+        return PageResolve.page(po, c -> salesmanMapper.salesmanInfolistCount(po), l -> salesmanMapper.salesmanInfolist(po));
     }
 
     /**
@@ -63,7 +60,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo add(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = adminMapper.addSalesmanInfo(infoForm);
+        SalesmanInfo result = salesmanMapper.addSalesmanInfo(infoForm);
         if (Objects.nonNull(result)) {
             return result;
         }
@@ -77,7 +74,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo chg(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = adminMapper.chgSalesmanInfo(infoForm);
+        SalesmanInfo result = salesmanMapper.chgSalesmanInfo(infoForm);
         if (Objects.nonNull(result)) {
             return result;
         }
@@ -91,7 +88,7 @@ public class AdminManage {
      * @return
      */
     public SalesmanInfo getSalesmanById(String id) {
-        SalesmanInfo result = adminMapper.getSalesmanInfoById(id);
+        SalesmanInfo result = salesmanMapper.getSalesmanInfoById(id);
         if (Objects.nonNull(result)) {
             return result;
         }
@@ -100,7 +97,7 @@ public class AdminManage {
 
     public void delSalesmanById(String id) {
         try{
-            adminMapper.delSalesmanById(id);
+            salesmanMapper.delSalesmanById(id);
         }catch (Exception e){
             log.error("删除销售人员失败,id={},excetpion={}",id,e);
             throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
