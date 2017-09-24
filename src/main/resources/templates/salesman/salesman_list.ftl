@@ -51,7 +51,7 @@
                     <#if currentPage gte list.getTotalPage()>
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
-                        <li><a href="/salesman/list?pageNo==${currentPage + 1}&size=${size}">下一页</a></li>
+                        <li><a href="/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a></li>
                     </#if>
                     </ul>
                 </div>

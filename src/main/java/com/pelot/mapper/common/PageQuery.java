@@ -40,9 +40,9 @@ public class PageQuery<T> {
      */
     public int getTotalPage(){
         if (getTotalCount() % getPageSize() == 0) {
-            return getTotalCount() % getPageSize();
+            return getTotalCount() / getPageSize();
         } else {
-            return getTotalCount() % getPageSize() + 1;
+            return getTotalCount() / getPageSize() + 1;
         }
     }
 

@@ -14,7 +14,23 @@
         </li>
 
         <li>
-            <a href="/salesman/detail><i class=" fa fa-fw fa-list-alt"></i>个人信息查询</a>
+            <a href="/salesman/detail"><i class=" fa fa-fw fa-list-alt"></i>个人信息查询</a>
+        </li>
+
+        <li>
+            <a href="/salesman/toChgMsg"><i class=" fa fa-fw fa-list-alt"></i>个人信息修改</a>
+        </li>
+
+        <li>
+            <a href="/salesman/toChgPwd"><i class=" fa fa-fw fa-list-alt"></i>密码修改</a>
+        </li>
+
+        <li>
+            <a href="/salesman/customerList"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
+        </li>
+
+        <li>
+            <a href="/salesman/addCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
         </li>
 
         <li>

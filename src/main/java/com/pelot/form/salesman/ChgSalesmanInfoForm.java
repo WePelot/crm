@@ -5,7 +5,7 @@
  * You shall not disclose such Confidential Information and shall use it only 
  * in accordance with the terms of the license agreement you entered into with GuaHao.com.
  */
-package com.pelot.form.admin;
+package com.pelot.form.salesman;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,15 +17,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 
 @Data
-public class SalesmanInfoForm {
-
-    private String id;
-
-    @NotEmpty(message = "姓名不能为空")
-    private String username;
-
-    @NotEmpty(message = "密码不能为空")
-    private String password;
+public class ChgSalesmanInfoForm {
 
     @NotEmpty(message = "姓名不能为空")
     private String name;

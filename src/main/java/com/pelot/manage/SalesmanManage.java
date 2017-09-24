@@ -9,11 +9,11 @@ package com.pelot.manage;
 
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
-import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.common.PageResolve;
 import com.pelot.mapper.salesman.SalesmanMapper;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.ChgPwdDTO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 import lombok.extern.slf4j.Slf4j;
@@ -59,12 +59,13 @@ public class SalesmanManage {
      * @param infoForm
      * @return
      */
-    public SalesmanInfo add(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = salesmanMapper.addSalesmanInfo(infoForm);
-        if (Objects.nonNull(result)) {
-            return result;
+    public void add(SalesmanInfo infoForm) {
+        try {
+            salesmanMapper.addSalesmanInfo(infoForm);
+        } catch (Exception e) {
+            log.error("添加销售人员失败,salesmanInfo={},excetpion={}", infoForm, e);
+            throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
         }
-        throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
     }
 
     /**
@@ -73,12 +74,13 @@ public class SalesmanManage {
      * @param infoForm
      * @return
      */
-    public SalesmanInfo chg(SalesmanInfoForm infoForm) {
-        SalesmanInfo result = salesmanMapper.chgSalesmanInfo(infoForm);
-        if (Objects.nonNull(result)) {
-            return result;
+    public void chg(SalesmanInfo infoForm) {
+        try {
+            salesmanMapper.chgSalesmanInfo(infoForm);
+        } catch (Exception e) {
+            log.error("修改销售人员失败,salesmanInfo={},excetpion={}", infoForm, e);
+            throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
         }
-        throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
     }
 
     /**
@@ -110,6 +112,18 @@ public class SalesmanManage {
             salesmanMapper.resetPwd(id);
         } catch (Exception e) {
             log.error("销售人员重置密码失败,id={},excetpion={}", id, e);
+            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
+        }
+    }
+
+    public void chgPwd(String newPwd, String id) {
+        try {
+            ChgPwdDTO dto = new ChgPwdDTO();
+            dto.setNewPwd(newPwd);
+            dto.setSalesmanId(id);
+            salesmanMapper.chgPwd(dto);
+        } catch (Exception e) {
+            log.error("销售人员重置密码失败,newPwd={},id={},exception={}", newPwd, id, e);
             throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
         }
     }

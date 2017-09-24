@@ -7,9 +7,9 @@
  */
 package com.pelot.mapper.salesman;
 
-import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.mapper.common.PagePO;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.ChgPwdDTO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 
@@ -44,7 +44,7 @@ public interface SalesmanMapper {
      * @param infoForm
      * @return
      */
-    SalesmanInfo addSalesmanInfo(SalesmanInfoForm infoForm);
+    void addSalesmanInfo(SalesmanInfo infoForm);
 
     /**
      * 修改销售人员信息
@@ -52,7 +52,7 @@ public interface SalesmanMapper {
      * @param infoForm
      * @return
      */
-    SalesmanInfo chgSalesmanInfo(SalesmanInfoForm infoForm);
+    void chgSalesmanInfo(SalesmanInfo infoForm);
 
     /**
      * 根据id获取销售人员信息
@@ -83,4 +83,11 @@ public interface SalesmanMapper {
      * @param salesmanId
      */
     void resetPwd(String salesmanId);
+
+    /**
+     * 修改密码
+     *
+     * @param dto
+     */
+    void chgPwd(ChgPwdDTO dto);
 }

@@ -32,7 +32,9 @@ public enum ResultEnum {
 
     SALESMANINFO_DEL_FAIL(7, "删除销售人员失败"),
 
-    SALESMANINFO_RESETPWD_FAIL(7, "销售人员密码重置失败"),;
+    SALESMANINFO_RESETPWD_FAIL(8, "销售人员密码重置失败"),
+
+    SALESMANINFO_CHGPWD_FAIL(9, "修改密码失败"),;
 
 
     private Integer code;

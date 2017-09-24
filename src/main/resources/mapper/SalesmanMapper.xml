@@ -11,7 +11,7 @@
         SELECT * from salesman_info
         <where>
             deleted = 0
-            <if test="identity==1">
+            <if test="identity=='1'">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
                 and identity = #{identity} AND id = #{salesmanId} and belong = #{belong}
             </if>
@@ -29,7 +29,6 @@
                 and identity = #{identity} AND id = #{salesmanId}
             </if>
         </where>
-        limit #{start}, #{pageSize}
     </select>
 
     <update id="resetPwd"
@@ -42,4 +41,24 @@
             parameterType="java.lang.String">
         SELECT * from salesman_info WHERE deleted = 0 and id = #{salesmanId}
     </select>
+
+    <update id="chgPwd"
+            parameterType="com.pelot.mapper.salesman.query.ChgPwdDTO">
+        UPDATE salesman_info SET password = #{newPwd} WHERE id = #{salesmanId}
+    </update>
+
+    <delete id="delSalesmanById">
+        DELETE salesman_info WHERE id = #{salesmanId}
+    </delete>
+
+    <insert id="addSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
+        INSERT INTO `salesman_info`(`id`,`username`, `password`,`name`,`phone`,`identity` ,`belong` ,`deleted`)
+          VALUES(uuid(),#{username},#{password},#{name},#{phone},#{identity},#{belong},0)
+    </insert>
+
+    <update id="chgSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
+          UPDATE  `salesman_info`  SET  name = #{name}, phone = #{phone}
+          WHERE id = #{id}
+    </update>
+
 </mapper>

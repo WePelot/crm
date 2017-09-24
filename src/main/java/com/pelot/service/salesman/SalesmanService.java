@@ -7,7 +7,6 @@
  */
 package com.pelot.service.salesman;
 
-import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.manage.SalesmanManage;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
@@ -32,12 +31,12 @@ public class SalesmanService {
         return salesmanManage.list(po);
     }
 
-    public SalesmanInfo add(SalesmanInfoForm info) {
-        return salesmanManage.add(info);
+    public void add(SalesmanInfo info) {
+        salesmanManage.add(info);
     }
 
-    public SalesmanInfo chg(SalesmanInfoForm info) {
-        return salesmanManage.chg(info);
+    public void chg(SalesmanInfo info) {
+        salesmanManage.chg(info);
     }
 
     public SalesmanInfo getSalesmanInfoById(String id) {
@@ -50,5 +49,9 @@ public class SalesmanService {
 
     public void resetPwd(String id) {
         salesmanManage.resetPwd(id);
+    }
+
+    public void chgPwd(String newPwd, String id) {
+        salesmanManage.chgPwd(newPwd, id);
     }
 }
