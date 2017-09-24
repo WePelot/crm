@@ -7,9 +7,8 @@
  */
 package com.pelot.form.admin;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * @author hongcj
@@ -34,9 +33,4 @@ public class SalesmanInfoForm {
     @NotEmpty(message = "联系号码不能为空")
     private String phone;
 
-    @NotEmpty(message = "地址不能为空")
-    private String address;
-
-    //身份，默认为普通销售人员
-    private Integer flag = new Integer(0);
 }

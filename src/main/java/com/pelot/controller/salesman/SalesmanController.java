@@ -1,5 +1,6 @@
 package com.pelot.controller.salesman;
 
+import com.pelot.controller.base.BaseController;
 import com.pelot.exception.SalesmanException;
 import com.pelot.form.admin.SalesmanInfoForm;
 import com.pelot.mapper.common.PageQuery;
@@ -27,20 +28,26 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/salesman")
-public class SalesmanController {
+public class SalesmanController extends BaseController {
     @Resource
     public SalesmanService salesmanService;
 
     /**
      * 获取销售人员列表集合
-     *
+     * 前端传过来的po里只有pageNo和pageSize
      * @return
      */
     @GetMapping("/list")
     public ModelAndView list(SalesmanListPagePO po) {
+        po.setIdentity(getIdentity());
+        po.setSalesmanId(getUserId());
+        //总负责人的上级为null
+        po.setBelong(getBelong());
         PageQuery<SalesmanInfo> list = salesmanService.list(po);
         Map<String, Object> map = new HashMap<>();
         map.put("list",list);
+        map.put("currentPage", po.getPageNo());
+        map.put("size", po.getPageSize());
         return new ModelAndView("salesman/salesman_list", map);
     }
 
@@ -65,26 +72,25 @@ public class SalesmanController {
             return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "salesman/salesman_list");
+            map.put("redirectUrl", "/salesman/salesman_list");
             return new ModelAndView("common/error", map);
         }
 
     }
 
     /**
-     * @param id
      * @param map
      * @return
      */
     @GetMapping("/detail")
-    public ModelAndView detail(@RequestParam String id, Map<String, Object> map) {
+    public ModelAndView detail(Map<String, Object> map) {
         try {
-            SalesmanInfo salesManInfo = salesmanService.getSalesmanById(id);
+            SalesmanInfo salesManInfo = salesmanService.getSalesmanInfoById(getUserId());
             map.put("salesManInfo", salesManInfo);
             return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "salesman/salesman_list");
+            map.put("redirectUrl", "/salesman/salesman_list");
             return new ModelAndView("common/error", map);
         }
     }
@@ -93,14 +99,30 @@ public class SalesmanController {
     @GetMapping("/del")
     public ModelAndView del(@RequestParam String id, Map<String, Object> map) {
         try {
-            SalesmanInfo salesManInfo = salesmanService.getSalesmanById(id);
+            SalesmanInfo salesManInfo = salesmanService.getSalesmanInfoById(id);
             salesmanService.delSalesmanById(salesManInfo.getId());
             map.put("errorMsg", "删除成功");
-            map.put("redirectUrl", "admin/salesman_list");
+            map.put("redirectUrl", "/salesman/salesman_list");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "admin/salesman_list");
+            map.put("redirectUrl", "/salesman/salesman_list");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+
+    @GetMapping("/resetPwd")
+    public ModelAndView resetPwd(@RequestParam String id, Map<String, Object> map) {
+        try {
+            SalesmanInfo salesManInfo = salesmanService.getSalesmanInfoById(id);
+            salesmanService.resetPwd(salesManInfo.getId());
+            map.put("errorMsg", "密码重置成功");
+            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
             return new ModelAndView("common/error", map);
         }
     }

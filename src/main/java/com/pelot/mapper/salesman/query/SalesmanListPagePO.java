@@ -17,5 +17,10 @@ public class SalesmanListPagePO extends PagePO {
     /**
      * 销售id
      */
-    private Integer salesmanId;
+    private String salesmanId;
+
+    /**
+     * 所属负责人
+     */
+    private String belong;
 }

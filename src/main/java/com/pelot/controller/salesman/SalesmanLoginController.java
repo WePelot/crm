@@ -9,6 +9,7 @@ package com.pelot.controller.salesman;
 
 import com.pelot.constant.CookieConstant;
 import com.pelot.enums.ResultEnum;
+import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
@@ -63,16 +64,22 @@ public class SalesmanLoginController {
         //1.判断用户名和密码是否正确
         SalesmanInfo salesmanInfo = salesmanLoginService.login(new SalesmanLoginPO(username, password));
         if (Objects.nonNull(salesmanInfo)) {
-            //2.写入cookie
-            String token = UUID.randomUUID().toString();
+            //2.写入cookie（token为随机字符串+用户ID+用户身份+ 用户所属上级）
+            String uuid = UUID.randomUUID().toString();
+            String token = uuid + "_" + salesmanInfo.getId() + "_" + salesmanInfo.getIdentity() + "_" + salesmanInfo.getBelong();
             //3. 将token写入cookie
             CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
             //查询条件
-            SalesmanListPagePO salesmanListPagePO = new SalesmanListPagePO();
-            salesmanListPagePO.setIdentity(salesmanInfo.getIdentity());
-            salesmanService.list(salesmanListPagePO);
+            SalesmanListPagePO po = new SalesmanListPagePO();
+            po.setIdentity(salesmanInfo.getIdentity());
+            po.setSalesmanId(salesmanInfo.getId());
+            po.setBelong(salesmanInfo.getBelong());
+            PageQuery<SalesmanInfo> list = salesmanService.list(po);
+            map.put("list", list);
+            map.put("currentPage", po.getPageNo());
+            map.put("size", po.getPageSize());
             //3.设置成功后跳转增加销售人员列表的界面
-            return new ModelAndView("salesman/salesman_list");
+            return new ModelAndView("salesman/salesman_list", map);
         } else {
             //用户名和密码不正确，转入错误页面
 

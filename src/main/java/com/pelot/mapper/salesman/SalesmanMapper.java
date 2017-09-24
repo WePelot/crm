@@ -57,10 +57,10 @@ public interface SalesmanMapper {
     /**
      * 根据id获取销售人员信息
      *
-     * @param id
+     * @param salesmanId
      * @return
      */
-    SalesmanInfo getSalesmanInfoById(String id);
+    SalesmanInfo getSalesmanInfoById(String salesmanId);
 
     /**
      * 分页查询销售人员的数目
@@ -72,8 +72,15 @@ public interface SalesmanMapper {
 
     /**
      * 根据id删除人员
-     * @param id
+     * @param salesmanId
      * @return
      */
-    void delSalesmanById(String id);
+    void delSalesmanById(String salesmanId);
+
+    /**
+     * 密码重置
+     *
+     * @param salesmanId
+     */
+    void resetPwd(String salesmanId);
 }

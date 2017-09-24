@@ -87,7 +87,7 @@ public class SalesmanManage {
      * @param id
      * @return
      */
-    public SalesmanInfo getSalesmanById(String id) {
+    public SalesmanInfo getSalesmanInfoById(String id) {
         SalesmanInfo result = salesmanMapper.getSalesmanInfoById(id);
         if (Objects.nonNull(result)) {
             return result;
@@ -100,6 +100,16 @@ public class SalesmanManage {
             salesmanMapper.delSalesmanById(id);
         }catch (Exception e){
             log.error("删除销售人员失败,id={},excetpion={}",id,e);
+            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
+        }
+    }
+
+
+    public void resetPwd(String id) {
+        try {
+            salesmanMapper.resetPwd(id);
+        } catch (Exception e) {
+            log.error("销售人员重置密码失败,id={},excetpion={}", id, e);
             throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
         }
     }

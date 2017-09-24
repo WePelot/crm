@@ -7,6 +7,9 @@
  */
 package com.pelot.mapper.salesman.dataobject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pelot.enums.SalesmanInfoIdentityEnum;
+import com.pelot.utils.EnumUtil;
 import lombok.Data;
 
 /**
@@ -42,17 +45,27 @@ public class SalesmanInfo {
     private String phone;
 
     /**
-     * 地址
-     */
-    private String address;
-
-    /**
      * 身份，0为普通销售，1为销售组长，2为总负责人
      */
     private Integer identity = new Integer(0);
 
     /**
+     * 所属上级，总负责人上级为0
+     */
+    private String belong;
+
+    /**
      * 是否被删除，0为未删除，1为已删除
      */
     private Integer deleted;
+
+    /**
+     * 获取销售身份
+     *
+     * @return
+     */
+    @JsonIgnore
+    public SalesmanInfoIdentityEnum getSalesmanInfoIdentityEnum() {
+        return EnumUtil.getByCode(identity, SalesmanInfoIdentityEnum.class);
+    }
 }

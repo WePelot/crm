@@ -11,9 +11,9 @@
         SELECT * from salesman_info
         <where>
             deleted = 0
-            <if test="identity=1">
+            <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
-                and identity = #{identity} AND id = #{salesmanId}
+                and identity = #{identity} AND id = #{salesmanId} and belong = #{belong}
             </if>
         </where>
         limit #{start}, #{pageSize}
@@ -24,11 +24,22 @@
         SELECT COUNT(*) from salesman_info
         <where>
             deleted = 0
-            <if test="identity=1">
+            <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
                 and identity = #{identity} AND id = #{salesmanId}
             </if>
         </where>
         limit #{start}, #{pageSize}
+    </select>
+
+    <update id="resetPwd"
+            parameterType="com.pelot.mapper.salesman.query.SalesmanListPagePO">
+        UPDATE salesman_info SET password = 'abc123' WHERE id = #{salesmanId}
+    </update>
+
+
+    <select id="getSalesmanInfoById" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo"
+            parameterType="java.lang.String">
+        SELECT * from salesman_info WHERE deleted = 0 and id = #{salesmanId}
     </select>
 </mapper>

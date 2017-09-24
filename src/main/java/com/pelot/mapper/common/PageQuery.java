@@ -1,8 +1,8 @@
 package com.pelot.mapper.common;
 
-import java.util.List;
-
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 页码分页查询结果
@@ -39,10 +39,10 @@ public class PageQuery<T> {
      * @return
      */
     public int getTotalPage(){
-        if (getTotalCount() % getTotalPage() == 0) {
-            return getTotalCount() % getTotalPage();
+        if (getTotalCount() % getPageSize() == 0) {
+            return getTotalCount() % getPageSize();
         } else {
-            return getTotalCount() % getTotalPage() + 1;
+            return getTotalCount() % getPageSize() + 1;
         }
     }
 

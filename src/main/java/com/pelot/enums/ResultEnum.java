@@ -30,7 +30,9 @@ public enum ResultEnum {
 
     SALESMANINFO_NOT_EXIST(6, "该销售人员已不存在"),
 
-    SALESMANINFO_DEL_FAIL(7,"删除销售人员失败");
+    SALESMANINFO_DEL_FAIL(7, "删除销售人员失败"),
+
+    SALESMANINFO_RESETPWD_FAIL(7, "销售人员密码重置失败"),;
 
 
     private Integer code;

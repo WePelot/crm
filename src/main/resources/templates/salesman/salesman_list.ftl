@@ -14,31 +14,21 @@
                         <thead>
                         <tr>
                             <th>用户名</th>
-                            <th>密码</th>
                             <th>姓名</th>
                             <th>手机</th>
-                            <th>地址</th>
                             <th>身份</th>
-                            <th>创建时间</th>
                             <th colspan="2">操作</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <#list list as dto>
+                        <#list list.data as dto>
                         <tr>
-                            <td>${list.username}</td>
-                            <td>${list.password}</td>
-                            <td>${list.name}</td>
-                            <td>${list.phone}</td>
-                            <td>${list.address}</td>
-                            <td>${list.getOrderStatusEnum().msg}</td>
-                            <td>${list.createTime}</td>
-                            <td><a href="/admin/salesman/detail?orderId=${dto.orderId}">详情</a></td>
-                            <td>
-                                <#if dto.getOrderStatusEnum().msg == "新订单">
-                                    <a href="/seller/order/cancel?orderId=${dto.orderId}">删除</a>
-                                </#if>
-                            </td>
+                            <td>${dto.username}</td>
+                            <td>${dto.name}</td>
+                            <td>${dto.phone}</td>
+                            <td>${dto.getSalesmanInfoIdentityEnum().msg}</td>
+                            <td><a href="/salesman/detail?id=${dto.id}">客户详情</a></td>
+                            <td><a href="/salesman/resetPwd?id=${dto.id}">密码重置</a></td>
                         </tr>
                         </#list>
                         </tbody>
@@ -49,19 +39,19 @@
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
-                        <li><a href="/seller/order/list?page=${currentPage -1}&size=${size}">上一页</a></li>
+                        <li><a href="/salesman/list?pageNo=${currentPage -1}&pageSize=${size}">上一页</a></li>
                     </#if>
-                    <#list 1..list.getTotalPages() as index>
+                    <#list 1..list.getTotalPage() as index>
                         <#if currentPage == index>
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
-                            <li class=><a href="/seller/order/list?page=${index}&size=${size}">${index}</a></li>
+                            <li class=><a href="/salesman/list?pageNo=${index}&pageSize=${size}">${index}</a></li>
                         </#if>
                     </#list>
-                    <#if currentPage gte list.getTotalPages()>
+                    <#if currentPage gte list.getTotalPage()>
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
-                        <li><a href="/seller/order/list?page=${currentPage + 1}&size=${size}">下一页</a></li>
+                        <li><a href="/salesman/list?pageNo==${currentPage + 1}&size=${size}">下一页</a></li>
                     </#if>
                     </ul>
                 </div>

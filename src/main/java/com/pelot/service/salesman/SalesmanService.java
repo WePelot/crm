@@ -40,11 +40,15 @@ public class SalesmanService {
         return salesmanManage.chg(info);
     }
 
-    public SalesmanInfo getSalesmanById(String id) {
-        return salesmanManage.getSalesmanById(id);
+    public SalesmanInfo getSalesmanInfoById(String id) {
+        return salesmanManage.getSalesmanInfoById(id);
     }
 
     public void delSalesmanById(String id) {
         salesmanManage.delSalesmanById(id);
+    }
+
+    public void resetPwd(String id) {
+        salesmanManage.resetPwd(id);
     }
 }

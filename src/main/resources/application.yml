@@ -4,19 +4,16 @@ spring:
     username: root
     password: 123456
     url: jdbc:mysql://127.0.0.1/crm?characterEncoding=utf-8&useSSL=false
-#项目相关的配置
+#椤圭洰璺緞
 projectUrl:
   crm: http://127.0.0.0
-#mybatis配置
+#mybatis閰嶇疆
 mybatis:
   mapper-locations: classpath:mapper/*.xml
 
-
+#鏃ュ織閰嶇疆
 logging:
   pattern:
-    #  日志+内容+换行
     console: "%d -%msg%n"
-  #默认的日志文件名称为spring.log
   file: "E:/logs/crm/crm.log"
-  #日志的默认级别修改为info
   level: info

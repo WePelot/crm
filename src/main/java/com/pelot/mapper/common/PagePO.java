@@ -15,12 +15,12 @@ public class PagePO {
     /**
      * 当前页码，第一页，pageNo=1
      */
-    private int pageNo;
+    private int pageNo = 1;
 
     /**
-     * 每页条数
+     * 每页条数,默认为20条
      */
-    private int pageSize;
+    private int pageSize = 20;
 
     /**
      * 获取开始的查询数
