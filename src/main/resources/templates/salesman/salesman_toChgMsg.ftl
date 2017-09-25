@@ -54,5 +54,41 @@
             </div>
         </div>
     </div>
+    <script>
+        $('form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                name: {
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 18,
+                            message: '姓名长度必须在1到18位之间'
+                        }
+                    }
+                },
+                phone: {
+                    validators: {
+                        notEmpty: {
+                            message: '手机号码不能为空'
+                        },
+                        regexp: {
+                            regexp: /^1(3|4|5|7|8)\d{9}$/,
+                            message: '手机号码格式不正确'
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
 </body>
 </html>

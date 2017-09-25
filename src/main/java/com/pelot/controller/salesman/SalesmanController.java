@@ -1,5 +1,7 @@
 package com.pelot.controller.salesman;
 
+import com.pelot.VO.ResultVO;
+import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
@@ -10,18 +12,21 @@ import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
+import com.pelot.utils.CookieUtil;
+import com.pelot.utils.ResultVOUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 销售人员的操作控制
@@ -31,6 +36,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/salesman")
+@Slf4j
 public class SalesmanController extends BaseController {
     @Resource
     public SalesmanService salesmanService;
@@ -56,6 +62,19 @@ public class SalesmanController extends BaseController {
     }
 
     /**
+     * 跳转修改个人信息的页面
+     *
+     * @return
+     */
+    @GetMapping("/toAddSalesman")
+    public ModelAndView toAddSalesman(Map<String, Object> map) {
+        //获取身份，用户界面上判断
+        Integer identity = getIdentity();
+        map.put("identity", identity);
+        return new ModelAndView("salesman/salesman_add", map);
+    }
+
+    /**
      * 新增
      *
      * @param info
@@ -63,20 +82,28 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @PostMapping("/add")
-    public ModelAndView save(@Valid AddSalesmanInfoForm info, BindingResult bindingResult, Map<String, Object> map) {
+    public ModelAndView add(@Valid AddSalesmanInfoForm info, BindingResult bindingResult, Map<String, Object> map) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new SalesmanException(ResultEnum.PARAM_ERROR);
             }
+            //判断手机号码是否存在
+            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(info.getPhone());
+            if (Objects.nonNull(salesmanInfoByPhone)) {
+                map.put("errorMsg", "该手机号码已经被其他销售人员绑定，请重新输入");
+                map.put("redirectUrl", "/salesman/toAddSalesman");
+                return new ModelAndView("common/error", map);
+            }
             SalesmanInfo salesmanInfo = new SalesmanInfo();
             salesmanInfo.setUsername(info.getUsername());
-            salesmanInfo.setPassword(info.getPassword());
             salesmanInfo.setName(info.getName());
-            salesmanInfo.setBelong(info.getBelong());
-            //为空说明是修改是新增
+            salesmanInfo.setBelong(getUserId());
+            salesmanInfo.setPhone(info.getPhone());
+            salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
-            map.put("salesmanInfo", salesmanInfo);
-            return new ModelAndView("salesman/salesman_detail", map);
+            map.put("errorMsg", "添加成功");
+            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
             map.put("redirectUrl", "/salesman/salesman_list");
@@ -191,16 +218,25 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @PostMapping("/chgPwd")
-    public ModelAndView chgPwd(@Valid ChgPwdForm form, BindingResult bindingResult, Map<String, Object> map) {
+    public ModelAndView chgPwd(@Valid ChgPwdForm form, BindingResult bindingResult,
+                               HttpServletResponse response, Map<String, Object> map) {
         try {
             if (bindingResult.hasErrors()) {
+                log.error("修改密码参数错误,错误信息={}", bindingResult.getFieldError().getDefaultMessage());
                 throw new SalesmanException(ResultEnum.PARAM_ERROR);
             }
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
-            if (form.getOldPwd().equals(salesmanInfo.getPassword())) {
-                salesmanService.chgPwd(form.getNewPwd(), getUserId());
-                map.put("errorMsg", "密码修改成功");
-                map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            if (form.getOldPassword().equals(salesmanInfo.getPassword())) {
+                salesmanService.chgPwd(form.getNewPassword(), getUserId());
+                map.put("errorMsg", "密码修改成功，请重新登录");
+                //密码修改成功，去除token，跳转到登录页
+                //1. 从cookie里查询,获取token
+                Cookie cookie = getToken();
+                if (Objects.nonNull(cookie)) {
+                    //2. 清除cookie里的token信息
+                    CookieUtil.set(response, CookieConstant.TOKEN, null, 0);
+                }
+                map.put("redirectUrl", "/html/salesman/login.html");
                 return new ModelAndView("common/success", map);
             } else {
                 map.put("errorMsg", "原密码输入不正确");
@@ -211,6 +247,31 @@ public class SalesmanController extends BaseController {
             map.put("errorMsg", e.getMessage());
             map.put("redirectUrl", "/salesman/toChgPwd");
             return new ModelAndView("common/error", map);
+        }
+    }
+
+    /**
+     * 校验用户名和手机号是否存在
+     *
+     * @param phone
+     * @param username
+     * @return
+     */
+    @GetMapping("/checkSalesmanInfoByUsernameAndPhone")
+    @ResponseBody
+    public ResultVO checkSalesmanInfoByUsernameAndPhone(@RequestParam String phone, @RequestParam String username) {
+        SalesmanInfo salesmanInfoByUsername = salesmanService.getSalesmanInfoByUsername(username);
+        if (Objects.nonNull(salesmanInfoByUsername)) {
+            //存在该手机号码绑定的销售人员
+            return ResultVOUtil.error(-1, "该用户名已存在");
+        } else {
+            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(phone);
+            if (Objects.nonNull(salesmanInfoByPhone)) {
+                //存在该手机号码绑定的销售人员
+                return ResultVOUtil.error(-1, "该手机号码已存在");
+            } else {
+                return ResultVOUtil.success();
+            }
         }
     }
 

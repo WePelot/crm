@@ -25,6 +25,10 @@ public class BaseController {
         return request;
     }
 
+    public Cookie getToken() {
+        return CookieUtil.get(getRequest(), CookieConstant.TOKEN);
+    }
+
     /**
      * 获取销售的用户ID
      *
@@ -32,7 +36,7 @@ public class BaseController {
      */
     public String getUserId() {
         //获取cookie
-        Cookie cookie = CookieUtil.get(getRequest(), CookieConstant.TOKEN);
+        Cookie cookie = getToken();
         if (cookie != null) {
             //获取userId,token为随机字符串+用户ID+用户身份,以_分割
             try {

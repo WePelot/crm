@@ -22,18 +22,13 @@ public class AddSalesmanInfoForm {
     @NotEmpty(message = "姓名不能为空")
     private String username;
 
-    @NotEmpty(message = "密码不能为空")
-    private String password;
-
     @NotEmpty(message = "姓名不能为空")
     private String name;
 
     @NotEmpty(message = "联系号码不能为空")
     private String phone;
 
-    /**
-     * 所属上级
-     */
-    private String belong;
+    @NotEmpty(message = "身份不能为空")
+    private String identity;
 
 }

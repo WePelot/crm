@@ -43,6 +43,10 @@ public class SalesmanService {
         return salesmanManage.getSalesmanInfoById(id);
     }
 
+    public SalesmanInfo getSalesmanInfoByPhone(String id) {
+        return salesmanManage.getSalesmanInfoByPhone(id);
+    }
+
     public void delSalesmanById(String id) {
         salesmanManage.delSalesmanById(id);
     }
@@ -53,5 +57,9 @@ public class SalesmanService {
 
     public void chgPwd(String newPwd, String id) {
         salesmanManage.chgPwd(newPwd, id);
+    }
+
+    public SalesmanInfo getSalesmanInfoByUsername(String username) {
+        return salesmanManage.getSalesmanInfoByUsername(username);
     }
 }

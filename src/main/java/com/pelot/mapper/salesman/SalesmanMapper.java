@@ -90,4 +90,20 @@ public interface SalesmanMapper {
      * @param dto
      */
     void chgPwd(ChgPwdDTO dto);
+
+    /**
+     * 根据手机号码查询销售人员
+     *
+     * @param phone
+     * @return
+     */
+    SalesmanInfo getSalesmanInfoByPhone(String phone);
+
+    /**
+     * 根据用户名查询销售人员
+     *
+     * @param username
+     * @return
+     */
+    SalesmanInfo getSalesmanInfoByUsername(String username);
 }

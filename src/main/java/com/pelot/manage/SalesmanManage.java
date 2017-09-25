@@ -127,4 +127,14 @@ public class SalesmanManage {
             throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
         }
     }
+
+    public SalesmanInfo getSalesmanInfoByPhone(String phone) {
+        SalesmanInfo result = salesmanMapper.getSalesmanInfoByPhone(phone);
+        return result;
+    }
+
+    public SalesmanInfo getSalesmanInfoByUsername(String username) {
+        SalesmanInfo result = salesmanMapper.getSalesmanInfoByUsername(username);
+        return result;
+    }
 }

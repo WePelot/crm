@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Data
 public class ChgPwdForm {
     @NotEmpty(message = "原密码不能为空")
-    private String oldPwd;
+    private String oldPassword;
     @NotEmpty(message = "新密码不能为空")
-    private String newPwd;
+    private String newPassword;
 }

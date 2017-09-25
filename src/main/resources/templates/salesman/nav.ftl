@@ -10,7 +10,7 @@
         </li>
 
         <li>
-            <a href="/salesman/add"><i class=" fa fa-fw fa-list-alt"></i>新增销售人员</a>
+            <a href="/salesman/toAddSalesman"><i class=" fa fa-fw fa-list-alt"></i>新增销售人员</a>
         </li>
 
         <li>
