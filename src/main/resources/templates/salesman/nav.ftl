@@ -30,7 +30,7 @@
         </li>
 
         <li>
-            <a href="/salesman/addCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
+            <a href="/salesman/toAddCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
         </li>
 
         <li>

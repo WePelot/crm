@@ -5,6 +5,7 @@ import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
+import com.pelot.form.salesman.AddCustomerForm;
 import com.pelot.form.salesman.AddSalesmanInfoForm;
 import com.pelot.form.salesman.ChgPwdForm;
 import com.pelot.form.salesman.ChgSalesmanInfoForm;
@@ -87,13 +88,13 @@ public class SalesmanController extends BaseController {
             if (bindingResult.hasErrors()) {
                 throw new SalesmanException(ResultEnum.PARAM_ERROR);
             }
-            //判断手机号码是否存在
-            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(info.getPhone());
-            if (Objects.nonNull(salesmanInfoByPhone)) {
-                map.put("errorMsg", "该手机号码已经被其他销售人员绑定，请重新输入");
-                map.put("redirectUrl", "/salesman/toAddSalesman");
-                return new ModelAndView("common/error", map);
-            }
+            //判断手机号码是否存在，前面已经做校验，这里就不做二次校验了
+//            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(info.getPhone());
+//            if (Objects.nonNull(salesmanInfoByPhone)) {
+//                map.put("errorMsg", "该手机号码已经被其他销售人员绑定，请重新输入");
+//                map.put("redirectUrl", "/salesman/toAddSalesman");
+//                return new ModelAndView("common/error", map);
+//            }
             SalesmanInfo salesmanInfo = new SalesmanInfo();
             salesmanInfo.setUsername(info.getUsername());
             salesmanInfo.setName(info.getName());
@@ -273,6 +274,65 @@ public class SalesmanController extends BaseController {
                 return ResultVOUtil.success();
             }
         }
+    }
+
+
+    /**
+     * 跳转新增新客户信息界面
+     *
+     * @return
+     */
+    @GetMapping("/toAddCustomer")
+    public ModelAndView toAddCustomer(Map<String, Object> map) {
+        try {
+            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
+            map.put("salesmanName", salesmanInfo.getName());
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/html/salesman/login.html");
+            return new ModelAndView("common/error", map);
+        }
+
+        return new ModelAndView("salesman/salesman_addCustomer", map);
+    }
+
+    /**
+     * 新增客户信息
+     *
+     * @param info
+     * @param bindingResult
+     * @param map
+     * @return
+     */
+    @PostMapping("/addCustomer")
+    public ModelAndView addCustomer(@Valid AddCustomerForm info, BindingResult bindingResult, Map<String, Object> map) {
+//        try {
+//            if (bindingResult.hasErrors()) {
+//                throw new SalesmanException(ResultEnum.PARAM_ERROR);
+//            }
+//            //判断手机号码是否存在
+//            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(info.getPhone());
+//            if (Objects.nonNull(salesmanInfoByPhone)) {
+//                map.put("errorMsg", "该手机号码已经被其他销售人员绑定，请重新输入");
+//                map.put("redirectUrl", "/salesman/toAddSalesman");
+//                return new ModelAndView("common/error", map);
+//            }
+//            SalesmanInfo salesmanInfo = new SalesmanInfo();
+//            salesmanInfo.setUsername(info.getUsername());
+//            salesmanInfo.setName(info.getName());
+//            salesmanInfo.setBelong(getUserId());
+//            salesmanInfo.setPhone(info.getPhone());
+//            salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
+//            salesmanService.add(salesmanInfo);
+//            map.put("errorMsg", "添加成功");
+//            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+//            return new ModelAndView("common/success", map);
+//        } catch (SalesmanException e) {
+//            map.put("errorMsg", e.getMessage());
+//            map.put("redirectUrl", "/salesman/salesman_list");
+//            return new ModelAndView("common/error", map);
+//        }
+        return null;
     }
 
 }
