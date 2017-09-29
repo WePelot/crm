@@ -316,4 +316,11 @@
         WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
     </select>
 
+
+    <select id="statistics" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        from customer_track_info a
+        WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
+    </select>
+
 </mapper>

@@ -466,6 +466,18 @@ public class SalesmanController extends BaseController {
     }
 
     /**
+     * 跳转新增新客户追踪信息界面
+     *
+     * @return
+     */
+    @GetMapping("/toAddCustomerTrackInfo")
+    public ModelAndView toAddCustomer(@RequestParam(value = "customerInfoId", required = false) String customerInfoId,
+        Map<String, Object> map) {
+        map.put("customerInfoId", customerInfoId);
+        return new ModelAndView("salesman/salesman_addCustomerTrack", map);
+    }
+
+    /**
      * 获取客户追踪信息集合
      *
      * @param po
