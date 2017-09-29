@@ -30,6 +30,8 @@
                 <div class="col-md-12 column">
                     <form class="form-horizontal" role="form" action="/salesman/saveCustomerInfo" method="post"
                           onsubmit="return checkCustomerForm();">
+                        <input type="hidden" class="form-control" name="id" readonly="readonly"
+                               value="${customerInfo.id!""}">
                         <div class="form-group">
                             <label for="receptionTime" class="col-sm-2 control-label">接待销售</label>
                             <div class="col-sm-6 column">
@@ -49,28 +51,31 @@
                             <label for="receptionTime" class="col-sm-2 control-label">接待时间</label>
                             <div class="col-sm-6 column">
                                 <input type="text" class="form-control" id="receptionTime" name="receptionTime"
-                                       readonly="readonly">
+                                       readonly="readonly" value="${customerInfo.receptionTime!""}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">姓名</label>
                             <div class="col-sm-6 column">
-                                <input type="text" class="form-control" id="name" name="name">
+                                <input type="text" class="form-control" id="name" name="name"
+                                       value="${customerInfo.name}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="phone" class="col-sm-2 control-label">客户电话</label>
                             <div class="col-sm-6 column">
-                                <input type="text" class="form-control" id="phone" name="phone"/>
+                                <input type="text" class="form-control" id="phone" name="phone"
+                                       value="${customerInfo.phone!""}"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="company" class="col-sm-2 control-label">代理公司</label>
                             <div class="col-sm-6 column">
-                                <input type="text" class="form-control" id="company" name="company"/>
+                                <input type="text" class="form-control" id="company" name="company"
+                                       value="${customerInfo.company!""}"/>
                             </div>
                         </div>
 
@@ -78,7 +83,7 @@
                             <div class="label-radio">
                                 <label class="col-sm-2 control-label">性别</label>
                                 <label>
-                                    <input type="radio" name="sex" checked="checked" value="1"><span>男</span>
+                                    <input type="radio" name="sex" value="1"><span>男</span>
                                 </label>
                                 <label>
                                     <input type="radio" name="sex" value="2"><span>女</span>
@@ -165,11 +170,11 @@
                             <label for="residentialDistrict" class="col-sm-2 control-label">居住小区</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" id="residentialDistrict"
-                                       name="residentialDistrict"/>
+                                       name="residentialDistrict" value="${customerInfo.residentialDistrict!""}"/>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class=" form-group">
                             <div class="label-radio">
                                 <label class="col-sm-2 control-label">工作区域</label>
                                 <label>
@@ -231,7 +236,7 @@
 
                         <div class="form-group">
                             <div class="label-radio">
-                                <label class="col-sm-2 control-label">获知渠道</label>
+                                <label class="col-sm-2 control-label">工作区域</label>
                                 <label>
                                     <input type="radio" name="msgAccess" value="户外大牌"><span>户外大牌</span>
                                 </label>
@@ -612,8 +617,8 @@
                             <div class="label-radio">
                                 <label class="col-sm-2 control-label">客户描述</label>
                                 <textarea name="desc" maxlength="100">
-
-                                </textarea>
+                                ${customerInfo.desc!""}
+                                    </textarea>
                             </div>
                         </div>
 
@@ -637,7 +642,25 @@
             autoclose: 1,
             language: 'zh-CN'
         });
-        $('#receptionTime').val(toDDMMMYYYY(new Date()));
+        $("input[name='receptionTime']").val("${customerInfo.receptionTime}".substring(0, 10));
+        $("input[name='sex'][value='${customerInfo.sex!""}']").attr("checked", true);
+        $("input[name='ageRange'][value='${customerInfo.ageRange!""}']").attr("checked", true);
+        $("input[name='familyStructure'][value='${customerInfo.familyStructure!""}']").attr("checked", true);
+        $("input[name='residentialRegion'][value='${customerInfo.residentialRegion!""}']").attr("checked", true);
+        $("input[name='workingArea'][value='${customerInfo.workingArea!""}']").attr("checked", true);
+        $("input[name='companyType'][value='${customerInfo.companyType!""}']").attr("checked", true);
+        $("input[name='job'][value='${customerInfo.job!""}']").attr("checked", true);
+        $("input[name='preferredProduct'][value='${customerInfo.preferredProduct!""}']").attr("checked", true);
+        $("input[name='preferredArea'][value='${customerInfo.preferredArea!""}']").attr("checked", true);
+        $("input[name='psychologicalUnitPrice'][value='${customerInfo.psychologicalUnitPrice!""}']").attr("checked", true);
+        $("input[name='psychologicalTotalPrice'][value='${customerInfo.psychologicalTotalPrice!""}']").attr("checked", true);
+        $("input[name='reason'][value='${customerInfo.reason!""}']").attr("checked", true);
+        $("input[name='payWay'][value='${customerInfo.payWay!""}']").attr("checked", true);
+        $("input[name='tripTools'][value='${customerInfo.tripTools!""}']").attr("checked", true);
+        $("input[name='keyFactor'][value='${customerInfo.keyFactor!""}']").attr("checked", true);
+        $("input[name='askingTime'][value='${customerInfo.askingTime!""}']").attr("checked", true);
+        $("input[name='loanTime'][value='${customerInfo.loanTime!""}']").attr("checked", true);
+        $("input[name='willingness'][value='${customerInfo.willingness!""}']").attr("checked", true);
 
         $('form').bootstrapValidator({
             message: 'This value is not valid',
@@ -680,29 +703,36 @@
             }
         });
 
+        //获取初始手机号码，如果手机号码有变动，则进行校验
+        var oldPhone = "${customerInfo.phone!""}";
         function checkCustomerForm() {
             var checkResult = false;
-
-            //获取当前表单状态
-            var flag = $("form").data("bootstrapValidator").isValid();
-            if (flag) {
-                //获取手机号码
-                var phone = $("#phone").val();
-                //发送ajax请求
-                $.ajax({
-                    url: '/salesman/checkCustomerInfoByPhone',
-                    async: false,//同步，会阻塞操作
-                    type: 'GET',//PUT DELETE POST
-                    data: {"phone": phone},
-                    success: function (result) {
-                        if (result.code == 0) {
-                            checkResult = true;
-                        } else {
-                            alert(result.msg);
+            var currentPhone = $("input[name='phone']").val();
+            if (currentPhone != oldPhone) {
+                //获取当前表单状态
+                var flag = $("form").data("bootstrapValidator").isValid();
+                if (flag) {
+                    //获取手机号码
+                    var phone = $("#phone").val();
+                    //发送ajax请求
+                    $.ajax({
+                        url: '/salesman/checkCustomerInfoByPhone',
+                        async: false,//同步，会阻塞操作
+                        type: 'GET',//PUT DELETE POST
+                        data: {"phone": phone},
+                        success: function (result) {
+                            if (result.code == 0) {
+                                checkResult = true;
+                            } else {
+                                alert(result.msg);
+                            }
                         }
-                    }
-                })
+                    })
+                }
+            } else {
+                checkResult = true;
             }
+
             return checkResult;
         }
     </script>

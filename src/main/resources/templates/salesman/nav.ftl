@@ -6,7 +6,7 @@
             </a>
         </li>
         <li>
-            <a href="/salesman/list?pageNo=1&pageSize=20"><i class="fa fa-fw fa-list-alt"></i>销售人员列表</a>
+            <a href="/salesman/listSalesmanInfo?pageNo=1&pageSize=20"><i class="fa fa-fw fa-list-alt"></i>销售人员列表</a>
         </li>
 
         <li>
@@ -26,7 +26,7 @@
         </li>
 
         <li>
-            <a href="/salesman/customerList"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
+            <a href="/salesman/listCustomerInfo"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
         </li>
 
         <li>

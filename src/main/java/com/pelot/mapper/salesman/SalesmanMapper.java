@@ -7,11 +7,11 @@
  */
 package com.pelot.mapper.salesman;
 
+import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PagePO;
+import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+import com.pelot.mapper.salesman.query.*;
 
 import java.util.List;
 
@@ -39,6 +39,14 @@ public interface SalesmanMapper {
     List<SalesmanInfo> salesmanInfolist(PagePO po);
 
     /**
+     * 分页查询销售人员的数目
+     *
+     * @param po
+     * @return
+     */
+    Integer salesmanInfolistCount(SalesmanListPagePO po);
+
+    /**
      * 增加销售人员
      *
      * @param infoForm
@@ -61,14 +69,6 @@ public interface SalesmanMapper {
      * @return
      */
     SalesmanInfo getSalesmanInfoById(String salesmanId);
-
-    /**
-     * 分页查询销售人员的数目
-     *
-     * @param po
-     * @return
-     */
-    Integer salesmanInfolistCount(SalesmanListPagePO po);
 
     /**
      * 根据id删除人员
@@ -106,4 +106,71 @@ public interface SalesmanMapper {
      * @return
      */
     SalesmanInfo getSalesmanInfoByUsername(String username);
+
+    /**
+     * 根据用户名，姓名，手机号码查询销售人员
+     *
+     * @param po
+     * @return
+     */
+    SalesmanInfo getSalesmanInfoByQuery(SalesmanInfoQueryPO po);
+
+    /**
+     * 获取所有的销售人员信息
+     *
+     * @return
+     */
+    List<SalesmanInfo> findAll();
+
+    /**
+     * 根据手机号码获取销售信息
+     *
+     * @param phone
+     * @return
+     */
+    CustomerInfo getCustomerInfoByPhone(String phone);
+
+    /**
+     * 添加客户信息
+     *
+     * @param info
+     */
+    void addCustomerInfo(CustomerInfoForm info);
+
+    /**
+     * 客户信息列表
+     *
+     * @return
+     */
+    List<CustomerInfo> customerInfoList(PagePO po);
+
+    /**
+     * 分页查询销售人员的数目
+     *
+     * @param po
+     * @return
+     */
+    Integer customerInfoListCount(CustomerListPagePO po);
+
+    /**
+     * 根据id 获取客户信息
+     *
+     * @param id
+     * @return
+     */
+    CustomerInfo getCustomerInfoById(String id);
+
+    /**
+     * 根据id删除客户信息
+     *
+     * @param id
+     */
+    void delCustomerInfoById(String id);
+
+    /**
+     * 修改客户信息
+     *
+     * @param info
+     */
+    void editCustomerInfo(CustomerInfoForm info);
 }

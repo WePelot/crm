@@ -117,13 +117,15 @@
                 var username = $("#username").val();
                 //获取手机号码
                 var phone = $("#phone").val();
+                //获取姓名
+                var name = $("#name").val();
 
                 //发送ajax请求
                 $.ajax({
-                    url: '/salesman/checkSalesmanInfoByUsernameAndPhone',
+                    url: '/salesman/checkSalesmanInfoByQuery',
                     async: false,//同步，会阻塞操作
                     type: 'GET',//PUT DELETE POST
-                    data: {"username": username, "phone": phone},
+                    data: {"username": username, "phone": phone, "name": name},
                     success: function (result) {
                         if (result.code == 0) {
                             checkResult = true;

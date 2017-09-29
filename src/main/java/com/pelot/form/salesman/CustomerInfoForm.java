@@ -1,15 +1,16 @@
-package com.pelot.mapper.salesman.dataobject;
+package com.pelot.form.salesman;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * 客户信息
  * Created by hongcj
- * 2017/9/26 23:53.
+ * 2017/9/26 23:48.
  */
 @Data
-public class CustomerInfo {
-
+public class CustomerInfoForm {
     /**
      * ID
      */
@@ -18,16 +19,13 @@ public class CustomerInfo {
     /**
      * 所属销售
      */
+    @NotEmpty(message = "置业顾问不能为空")
     private String salesmanId;
-
-    /**
-     * 所属销售名称
-     */
-    private String salesmanName;
 
     /**
      * 接待时间
      */
+    @NotEmpty(message = "接待时间不能为空")
     private String receptionTime;
 
     /**
@@ -38,16 +36,19 @@ public class CustomerInfo {
     /**
      * 姓名
      */
+    @NotEmpty(message = "客户姓名不能为空")
     private String name;
 
     /**
      * 客户电话
      */
+    @NotEmpty(message = "客户电话不能为空")
     private String phone;
 
     /**
      * 性别，1为男，2为女
      */
+    @NotNull(message = "客户姓名不能为空")
     private Integer sex;
 
     /**
@@ -149,4 +150,6 @@ public class CustomerInfo {
      * 客户描述
      */
     private String desc;
+
+
 }

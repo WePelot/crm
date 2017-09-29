@@ -5,18 +5,21 @@ import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
-import com.pelot.form.salesman.AddCustomerForm;
 import com.pelot.form.salesman.AddSalesmanInfoForm;
 import com.pelot.form.salesman.ChgPwdForm;
 import com.pelot.form.salesman.ChgSalesmanInfoForm;
+import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PageQuery;
+import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
 import com.pelot.utils.CookieUtil;
 import com.pelot.utils.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +29,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -47,13 +51,13 @@ public class SalesmanController extends BaseController {
      * 前端传过来的po里只有pageNo和pageSize
      * @return
      */
-    @GetMapping("/list")
-    public ModelAndView list(SalesmanListPagePO po) {
+    @GetMapping("/listSalesmanInfo")
+    public ModelAndView listSalesmanInfo(SalesmanListPagePO po) {
         po.setIdentity(getIdentity());
         po.setSalesmanId(getUserId());
         //总负责人的上级为null
         po.setBelong(getBelong());
-        PageQuery<SalesmanInfo> list = salesmanService.list(po);
+        PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
         Map<String, Object> map = new HashMap<>();
         map.put("list",list);
         //在查询时会将page减1，所以这里需要加1
@@ -103,7 +107,7 @@ public class SalesmanController extends BaseController {
             salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
             map.put("errorMsg", "添加成功");
-            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            map.put("redirectUrl", "/salesman/listSalesmanInfo?pageNo=1&pageSize=20");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
@@ -169,8 +173,8 @@ public class SalesmanController extends BaseController {
     }
 
 
-    @GetMapping("/del")
-    public ModelAndView del(@RequestParam String id, Map<String, Object> map) {
+    @GetMapping("/delSalesman")
+    public ModelAndView delSalesman(@RequestParam String id, Map<String, Object> map) {
         try {
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(id);
             salesmanService.delSalesmanById(salesmanInfo.getId());
@@ -191,11 +195,11 @@ public class SalesmanController extends BaseController {
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(id);
             salesmanService.resetPwd(salesmanInfo.getId());
             map.put("errorMsg", "密码重置成功");
-            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            map.put("redirectUrl", "/salesman/listSalesmanInfo?pageNo=1&pageSize=20");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
+            map.put("redirectUrl", "/salesman/listSalesmanInfo?pageNo=1&pageSize=20");
             return new ModelAndView("common/error", map);
         }
     }
@@ -258,22 +262,20 @@ public class SalesmanController extends BaseController {
      * @param username
      * @return
      */
-    @GetMapping("/checkSalesmanInfoByUsernameAndPhone")
+    @GetMapping("/checkSalesmanInfoByQuery")
     @ResponseBody
-    public ResultVO checkSalesmanInfoByUsernameAndPhone(@RequestParam String phone, @RequestParam String username) {
-        SalesmanInfo salesmanInfoByUsername = salesmanService.getSalesmanInfoByUsername(username);
-        if (Objects.nonNull(salesmanInfoByUsername)) {
-            //存在该手机号码绑定的销售人员
+    public ResultVO checkSalesmanInfoByQuery(@RequestParam String phone, @RequestParam String username, @RequestParam String name) {
+        SalesmanInfo salesmanInfoByQuery = salesmanService.getSalesmanInfoByQuery(username, name, phone);
+        if (Objects.isNull(salesmanInfoByQuery)) {
+            return ResultVOUtil.success();
+        } else if (username.equals(salesmanInfoByQuery.getUsername())) {
             return ResultVOUtil.error(-1, "该用户名已存在");
-        } else {
-            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(phone);
-            if (Objects.nonNull(salesmanInfoByPhone)) {
-                //存在该手机号码绑定的销售人员
-                return ResultVOUtil.error(-1, "该手机号码已存在");
-            } else {
-                return ResultVOUtil.success();
-            }
+        } else if (name.equals(salesmanInfoByQuery.getName())) {
+            return ResultVOUtil.error(-1, "该姓名已存在");
+        } else if (phone.equals(salesmanInfoByQuery.getPhone())) {
+            return ResultVOUtil.error(-1, "该手机号码已存在");
         }
+        return ResultVOUtil.success();
     }
 
 
@@ -285,16 +287,39 @@ public class SalesmanController extends BaseController {
     @GetMapping("/toAddCustomer")
     public ModelAndView toAddCustomer(Map<String, Object> map) {
         try {
-            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
-            map.put("salesmanName", salesmanInfo.getName());
+            map.put("currentId", getUserId());
+            List<SalesmanInfo> list = salesmanService.findAll();
+            map.put("list", list);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
             map.put("redirectUrl", "/html/salesman/login.html");
             return new ModelAndView("common/error", map);
         }
-
         return new ModelAndView("salesman/salesman_addCustomer", map);
     }
+
+    /**
+     * 跳转编辑新客户信息界面
+     *
+     * @return
+     */
+    @GetMapping("/toEditCustomer")
+    public ModelAndView toEditCustomer(@RequestParam(value = "id", required = false) String id, Map<String, Object> map) {
+        try {
+            CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
+            map.put("customerInfo", customerInfo);
+            map.put("currentId", customerInfo.getSalesmanId());
+            List<SalesmanInfo> list = salesmanService.findAll();
+            map.put("list", list);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/html/salesman/login.html");
+            return new ModelAndView("common/error", map);
+        }
+        return new ModelAndView("salesman/salesman_editCustomer", map);
+    }
+
+
 
     /**
      * 新增客户信息
@@ -304,35 +329,131 @@ public class SalesmanController extends BaseController {
      * @param map
      * @return
      */
-    @PostMapping("/addCustomer")
-    public ModelAndView addCustomer(@Valid AddCustomerForm info, BindingResult bindingResult, Map<String, Object> map) {
-//        try {
-//            if (bindingResult.hasErrors()) {
-//                throw new SalesmanException(ResultEnum.PARAM_ERROR);
-//            }
-//            //判断手机号码是否存在
-//            SalesmanInfo salesmanInfoByPhone = salesmanService.getSalesmanInfoByPhone(info.getPhone());
-//            if (Objects.nonNull(salesmanInfoByPhone)) {
-//                map.put("errorMsg", "该手机号码已经被其他销售人员绑定，请重新输入");
-//                map.put("redirectUrl", "/salesman/toAddSalesman");
-//                return new ModelAndView("common/error", map);
-//            }
-//            SalesmanInfo salesmanInfo = new SalesmanInfo();
-//            salesmanInfo.setUsername(info.getUsername());
-//            salesmanInfo.setName(info.getName());
-//            salesmanInfo.setBelong(getUserId());
-//            salesmanInfo.setPhone(info.getPhone());
-//            salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
-//            salesmanService.add(salesmanInfo);
-//            map.put("errorMsg", "添加成功");
-//            map.put("redirectUrl", "/salesman/list?pageNo=1&pageSize=20");
-//            return new ModelAndView("common/success", map);
-//        } catch (SalesmanException e) {
-//            map.put("errorMsg", e.getMessage());
-//            map.put("redirectUrl", "/salesman/salesman_list");
-//            return new ModelAndView("common/error", map);
-//        }
-        return null;
+    @PostMapping("/saveCustomerInfo")
+    public ModelAndView saveCustomerInfo(@Valid CustomerInfoForm info, BindingResult bindingResult, Map<String, Object> map) {
+        try {
+            if (bindingResult.hasErrors()) {
+                throw new SalesmanException(ResultEnum.PARAM_ERROR);
+            }
+            if (StringUtils.isEmpty(info.getId())) {
+                //判断手机号码是否存在
+                CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
+                if (Objects.nonNull(customerInfoByPhone)) {
+                    map.put("errorMsg", "该手机号码已经存在，请重新输入");
+                    map.put("redirectUrl", "/salesman/toAddCustomer");
+                    return new ModelAndView("common/error", map);
+                }
+                //为空，说明为新增
+                salesmanService.addCustomerInfo(info);
+                map.put("errorMsg", "添加成功");
+            } else {
+                //不为空，修改
+                //先判断对应的id是否存在
+                CustomerInfo customerInfoById = salesmanService.getCustomerInfoById(info.getId());
+                //判断手机是否有修改
+                if (!customerInfoById.getPhone().equals(info.getPhone())) {
+                    //手机号相同，则为同一个人，无需判断手机号是否存在
+                    //判断手机号码是否存在
+                    CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
+                    if (Objects.nonNull(customerInfoByPhone)) {
+                        map.put("errorMsg", "该手机号码已经存在，请重新输入");
+                        map.put("redirectUrl", "/salesman/toEditCustomer");
+                        return new ModelAndView("common/error", map);
+                    }
+                }
+                salesmanService.editCustomerInfo(info);
+                map.put("errorMsg", "修改成功");
+            }
+            map.put("redirectUrl", "/salesman/listCustomerInfo?pageNo=1&pageSize=20");
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/salesman_list");
+            return new ModelAndView("common/error", map);
+        }
     }
+
+    /**
+     * 校验手机号是否存在
+     *
+     * @param phone
+     * @return
+     */
+    @GetMapping("/checkCustomerInfoByPhone")
+    @ResponseBody
+    public ResultVO checkCustomerInfoByPhone(@RequestParam String phone) {
+        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(phone);
+        if (Objects.isNull(customerInfoByPhone)) {
+            return ResultVOUtil.success();
+        } else {
+            return ResultVOUtil.error(-1, "该手机号码已存在");
+        }
+    }
+
+
+    /**
+     * 获取客户信息集合
+     *
+     * @param po
+     * @return
+     */
+    @GetMapping("/listCustomerInfo")
+    public ModelAndView listCustomerInfo(CustomerListPagePO po) {
+        po.setSalesmanId(getUserId());
+        PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        //在查询时会将page减1，所以这里需要加1
+        map.put("currentPage", po.getPageNo() + 1);
+        map.put("size", po.getPageSize());
+        return new ModelAndView("salesman/customer_list", map);
+    }
+
+
+    /**
+     * 删除客户信息
+     *
+     * @param id
+     * @param map
+     * @return
+     */
+    @GetMapping("/delCustomerInfo")
+    public ModelAndView delCustomerInfo(@RequestParam String id, Map<String, Object> map) {
+        try {
+            CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
+            salesmanService.delCustomerInfoById(customerInfo.getId());
+            map.put("errorMsg", "删除成功");
+            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+    /**
+     * 客户信息详情
+     *
+     * @param id  客户ID
+     * @param map
+     * @return
+     */
+    @GetMapping("/customerInfoDetail")
+    public ModelAndView customerInfoDetail(@RequestParam(value = "id", required = false) String id, Map<String, Object> map) {
+        try {
+            CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
+            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
+//            customerInfo.setDesc("1");
+            map.put("customerInfo", customerInfo);
+            map.put("salesmanName", salesmanInfo.getName());
+            return new ModelAndView("salesman/customer_detail", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
 
 }

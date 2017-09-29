@@ -74,7 +74,7 @@ public class SalesmanLoginController {
             po.setIdentity(salesmanInfo.getIdentity());
             po.setSalesmanId(salesmanInfo.getId());
             po.setBelong(salesmanInfo.getBelong());
-            PageQuery<SalesmanInfo> list = salesmanService.list(po);
+            PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
             map.put("list", list);
             map.put("currentPage", po.getPageNo());
             map.put("size", po.getPageSize());

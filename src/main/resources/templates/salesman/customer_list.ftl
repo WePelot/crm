@@ -2,10 +2,10 @@
 <#include "../common/header.ftl">
 <body>
 <div id="wrapper" class="toggled">
-    <#--边栏sidebar-->
-    <#include "../salesman/nav.ftl">
+<#--边栏sidebar-->
+<#include "../salesman/nav.ftl">
 
-    <#--主要内容content-->
+<#--主要内容content-->
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="row clearfix">
@@ -13,23 +13,25 @@
                     <table class="table table-bordered table-condensed">
                         <thead>
                         <tr>
-                            <th>用户名</th>
-                            <th>姓名</th>
-                            <th>手机</th>
-                            <th>身份</th>
-                            <th colspan="2">操作</th>
+                            <th>客户姓名</th>
+                            <th>客户性别</th>
+                            <th>客户电话</th>
+                            <th>接待销售</th>
+                            <th colspan="4">操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <#if list.data?exists>
                             <#list list.data as dto>
                             <tr>
-                                <td>${dto.username}</td>
                                 <td>${dto.name}</td>
+                                <td>${dto.sex}</td>
                                 <td>${dto.phone}</td>
-                                <td>${dto.getSalesmanInfoIdentityEnum().msg}</td>
-                                <td><a href="/salesman/detail?id=${dto.id}">详情</a></td>
-                                <td><a href="/salesman/resetPwd?id=${dto.id}">密码重置</a></td>
+                                <td>${dto.salesmanName}</td>
+                                <td><a href="/salesman/customerInfoDetail?id=${dto.id}">客户详情</a></td>
+                                <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
+                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
+                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">客户信息追踪</a></td>
                             </tr>
                             </#list>
                         </#if>

@@ -2,7 +2,7 @@
 <head>
     <meta charset="utf-8">
     <title>提示</title>
-    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 

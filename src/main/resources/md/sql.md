@@ -9,7 +9,7 @@ create table `salesman_info` (
     `phone` varchar(32) UNIQUE not null,
     `identity` int(3) not null comment '身份，0为普通销售，1为销售组长，2为总负责人',
     `belong` varchar(64) comment '所属于上级ID',
-    `deleted` int(3) not null comment '是否删除，0为未删除，1为已删除',
+    `deleted` int(3) not null default 0  comment '是否删除，0为未删除，1为已删除',
     `create_time` timestamp not null default current_timestamp comment '创建时间',
     `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
     primary key (`id`)
@@ -20,7 +20,7 @@ INSERT INTO `salesman_info` VALUES(uuid(),'hongcj','123456','洪陈金','1506718
 -- 客户信息表
 create table `customer_info` (
     `id` varchar(64) not null,
-    `salesmanId` varchar(64) not null comment '所属销售',
+    `salesmanid` varchar(64) not null comment '所属销售',
     `receptiontime` timestamp not null comment '接待时间',
     `company` varchar(64) not null comment '代理公司',
 		`name`  varchar(64) not null comment '姓名',
@@ -46,7 +46,7 @@ create table `customer_info` (
 		`loan_time` varchar(32) comment '贷款次数',
 		`willingness` varchar(32) comment '客户意愿',
 		`desc` varchar(300) comment '客户描述',
-    `deleted` int(3) not null comment '是否删除，0为未删除，1为已删除',
+    `deleted` int(3) not null default 0  comment '是否删除，0为未删除，1为已删除',
     `create_time` timestamp not null default current_timestamp comment '创建时间',
     `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
     primary key (`id`)

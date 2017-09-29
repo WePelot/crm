@@ -26,15 +26,25 @@ public enum ResultEnum {
 
     NOT_LOGIN(4, "管理员未进行登录"),
 
-    SALESMANINFO_ADD_CHG_FAIL(5, "新增或修改销售人员信息失败"),
+    SALESMANINFO_ADD_FAIL(5, "新增销售人员信息失败"),
 
-    SALESMANINFO_NOT_EXIST(6, "该销售人员已不存在"),
+    SALESMANINFO_CHG_FAIL(6, "修改销售人员信息失败"),
 
-    SALESMANINFO_DEL_FAIL(7, "删除销售人员失败"),
+    SALESMANINFO_NOT_EXIST(7, "该销售人员已不存在"),
 
-    SALESMANINFO_RESETPWD_FAIL(8, "销售人员密码重置失败"),
+    SALESMANINFO_DEL_FAIL(8, "删除销售人员失败"),
 
-    SALESMANINFO_CHGPWD_FAIL(9, "修改密码失败"),;
+    SALESMANINFO_RESETPWD_FAIL(9, "销售人员密码重置失败"),
+
+    SALESMANINFO_CHGPWD_FAIL(10, "修改密码失败"),
+
+    CUSTOMERINFO_NOT_EXIST(11, "改客户信息不存在"),
+
+    CUSTOMERINFO_DEL_FAIL(12, "删除客户信息失败"),
+
+    CUSTOMERINFO_ADD_FAIL(13, "新增客户信息失败"),
+
+    CUSTOMERINFO_CHG_FAIL(14, "修改客户信息失败"),;
 
 
     private Integer code;

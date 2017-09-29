@@ -47,13 +47,13 @@
         UPDATE salesman_info SET password = #{newPwd} WHERE id = #{salesmanId}
     </update>
 
-    <delete id="delSalesmanById">
-        DELETE salesman_info WHERE id = #{salesmanId}
-    </delete>
+    <update id="delSalesmanById">
+        UPDATE salesman_info SET deleted = 1 WHERE id = #{salesmanId}
+    </update>
 
     <insert id="addSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
-        INSERT INTO `salesman_info`(`id`,`username`, `password`,`name`,`phone`,`identity` ,`belong` ,`deleted`)
-        VALUES(uuid(),#{username},'abc123',#{name},#{phone},#{identity},#{belong},0)
+        INSERT INTO `salesman_info`(`id`,`username`, `password`,`name`,`phone`,`identity` ,`belong`)
+        VALUES(uuid(),#{username},'abc123',#{name},#{phone},#{identity},#{belong})
     </insert>
 
     <update id="chgSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
@@ -71,5 +71,198 @@
         SELECT * from salesman_info WHERE deleted = 0 and username = #{username}
     </select>
 
+    <select id="getSalesmanInfoByQuery" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo"
+            parameterType="com.pelot.mapper.salesman.query.SalesmanInfoQueryPO">
+        SELECT * from salesman_info
+          WHERE deleted = 0
+            and username = #{username}
+            and name = #{name}
+            and phone = #{phone}
+    </select>
 
+    <select id="findAll" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
+        SELECT * from salesman_info  WHERE deleted = 0
+    </select>
+
+    <select id="getCustomerInfoByPhone" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
+            parameterType="java.lang.String">
+        SELECT * from customer_info
+        WHERE deleted = 0
+        and phone = #{phone}
+    </select>
+
+    <select id="getCustomerInfoById" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
+            parameterType="java.lang.String">
+        SELECT `id` as id,
+            `salesmanid` as salesmanId,
+            `receptiontime` as receptionTime,
+            `company` as company,
+            `name` as name,
+            `phone` as phone,
+            `sex` as sex,
+            `agerange` as ageRange,
+            `family_structure` as familyStructure,
+            `residential_region` as residentialRegion,
+            `residential_district` as residentialDistrict,
+            `workingarea` as workingArea,
+            `msgaccess` as msgAccess,
+            `company_type` as companyType,
+            `job` as job,
+            `preferred_product` as preferredProduct,
+            `preferred_area` as preferredArea,
+            `psychological_unit_price` as psychologicalUnitPrice,
+            `psychological_total_price` as psychologicalTotalPrice,
+            `reason` as reason,
+            `payway` as payWay,
+            `trip_tools` as tripTools,
+            `key_factor` as keyFactor,
+            `asking_time` as askingTime,
+            `loan_time` as loanTime,
+            `willingness` as willingness,
+            `desc` as 'desc'
+             from customer_info
+        WHERE deleted = 0
+        and id = #{id}
+    </select>
+
+    <update id="delCustomerInfoById">
+        UPDATE customer_info SET deleted = 1 WHERE id = #{id}
+    </update>
+
+    <insert id="addCustomerInfo" parameterType="com.pelot.form.salesman.CustomerInfoForm">
+        INSERT INTO `customer_info`(
+            `id`,
+            `salesmanid`,
+            `receptiontime`,
+            `company`,
+            `name`,
+            `phone`,
+            `sex`,
+            `agerange`,
+            `family_structure`,
+            `residential_region`,
+            `residential_district`,
+            `workingarea`,
+            `msgaccess`,
+            `company_type`,
+            `job`,
+            `preferred_product`,
+            `preferred_area`,
+            `psychological_unit_price`,
+            `psychological_total_price`,
+            `reason`,
+            `payway`,
+            `trip_tools`,
+            `key_factor`,
+            `asking_time`,
+            `loan_time`,
+            `willingness`,
+            `desc`)
+        VALUES(
+            uuid(),
+            #{salesmanId},
+            #{receptionTime},
+            #{company},
+            #{name},
+            #{phone},
+            #{sex},
+            #{ageRange},
+            #{familyStructure},
+            #{residentialRegion},
+            #{residentialDistrict},
+            #{workingArea},
+            #{msgAccess},
+            #{companyType},
+            #{job},
+            #{preferredProduct},
+            #{preferredArea},
+            #{psychologicalUnitPrice},
+            #{psychologicalTotalPrice},
+            #{reason},
+            #{payWay},
+            #{tripTools},
+            #{keyFactor},
+            #{askingTime},
+            #{loanTime},
+            #{willingness},
+            #{desc})
+    </insert>
+
+    <select id="customerInfoList" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
+            parameterType="com.pelot.mapper.salesman.query.CustomerListPagePO">
+        SELECT
+            a.`id` as id,
+            a.`salesmanid` as salesmanId,
+            a.`receptiontime` as receptionTime,
+            a.`company` as company,
+            a.`name` as name,
+            a.`phone` as phone,
+            a.`sex` as sex,
+            a.`agerange` as ageRange,
+            a.`family_structure` as familyStructure,
+            a.`residential_region` as residentialRegion,
+            a.`residential_district` as residentialDistrict,
+            a.`workingarea` as workingArea,
+            a.`msgaccess` as msgAccess,
+            a.`company_type` as companyType,
+            a.`job` as job,
+            a.`preferred_product` as preferredProduct,
+            a.`preferred_area` as preferredArea,
+            a.`psychological_unit_price` as psychologicalUnitPrice,
+            a.`psychological_total_price` as psychologicalTotalPrice,
+            a.`reason` as reason,
+            a.`payway` as payWay,
+            a.`trip_tools` as tripTools,
+            a.`key_factor` as keyFactor,
+            a.`asking_time` as askingTime,
+            a.`loan_time` as loanTime,
+            a.`willingness` as willingness,
+            a.`desc` as 'desc',
+            c.salesmanName as salesmanName
+        from customer_info a
+        LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
+        ON a.salesmanId = c.salesmanId
+        WHERE a.deleted = 0
+        limit #{start}, #{pageSize}
+    </select>
+
+
+    <select id="customerInfoListCount" resultType="java.lang.Integer"
+            parameterType="com.pelot.mapper.salesman.query.CustomerListPagePO">
+        SELECT count(*) from customer_info a
+          LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
+          ON a.salesmanId = c.salesmanId
+          WHERE a.deleted = 0
+    </select>
+
+    <update id="editCustomerInfo" parameterType="com.pelot.form.salesman.CustomerInfoForm">
+        UPDATE customer_info
+            set `salesmanid` = #{salesmanId},
+            `receptiontime` = #{receptionTime},
+           `company` = #{company},
+            `name` = #{name},
+            `phone` = #{phone},
+            `sex` = #{sex},
+            `agerange` = #{ageRange},
+            `family_structure` = #{familyStructure},
+            `residential_region` = #{residentialRegion},
+            `residential_district` = #{residentialDistrict},
+            `workingarea` = #{workingArea},
+            `msgaccess`  = #{msgAccess},
+            `company_type` = #{companyType},
+            `job` = #{job},
+            `preferred_product` = #{preferredProduct},
+            `preferred_area` = #{preferredArea},
+            `psychological_unit_price` = #{psychologicalUnitPrice},
+            `psychological_total_price` = #{psychologicalTotalPrice},
+            `reason`  = #{reason},
+            `payway`  = #{payWay},
+            `trip_tools` = #{tripTools},
+            `key_factor`  = #{keyFactor},
+            `asking_time` = #{askingTime},
+            `loan_time` = #{loanTime},
+            `willingness` = #{willingness},
+            `desc` = #{desc}
+        WHERE id = #{id}
+      </update>
 </mapper>

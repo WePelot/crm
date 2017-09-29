@@ -7,20 +7,18 @@
  */
 package com.pelot.manage;
 
-import com.pelot.enums.ResultEnum;
-import com.pelot.exception.SalesmanException;
+import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.common.PageResolve;
 import com.pelot.mapper.salesman.SalesmanMapper;
+import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+import com.pelot.mapper.salesman.query.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * @author hongcj
@@ -60,12 +58,7 @@ public class SalesmanManage {
      * @return
      */
     public void add(SalesmanInfo infoForm) {
-        try {
-            salesmanMapper.addSalesmanInfo(infoForm);
-        } catch (Exception e) {
-            log.error("添加销售人员失败,salesmanInfo={},excetpion={}", infoForm, e);
-            throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
-        }
+        salesmanMapper.addSalesmanInfo(infoForm);
     }
 
     /**
@@ -75,12 +68,7 @@ public class SalesmanManage {
      * @return
      */
     public void chg(SalesmanInfo infoForm) {
-        try {
-            salesmanMapper.chgSalesmanInfo(infoForm);
-        } catch (Exception e) {
-            log.error("修改销售人员失败,salesmanInfo={},excetpion={}", infoForm, e);
-            throw new SalesmanException(ResultEnum.SALESMANINFO_ADD_CHG_FAIL);
-        }
+        salesmanMapper.chgSalesmanInfo(infoForm);
     }
 
     /**
@@ -90,42 +78,39 @@ public class SalesmanManage {
      * @return
      */
     public SalesmanInfo getSalesmanInfoById(String id) {
-        SalesmanInfo result = salesmanMapper.getSalesmanInfoById(id);
-        if (Objects.nonNull(result)) {
-            return result;
-        }
-        throw new SalesmanException(ResultEnum.SALESMANINFO_NOT_EXIST);
+        return salesmanMapper.getSalesmanInfoById(id);
     }
 
+    /**
+     * 删除销售人员
+     *
+     * @param id
+     */
     public void delSalesmanById(String id) {
-        try{
-            salesmanMapper.delSalesmanById(id);
-        }catch (Exception e){
-            log.error("删除销售人员失败,id={},excetpion={}",id,e);
-            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
-        }
+        salesmanMapper.delSalesmanById(id);
     }
 
 
+    /**
+     * 密码重置
+     *
+     * @param id
+     */
     public void resetPwd(String id) {
-        try {
-            salesmanMapper.resetPwd(id);
-        } catch (Exception e) {
-            log.error("销售人员重置密码失败,id={},excetpion={}", id, e);
-            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
-        }
+        salesmanMapper.resetPwd(id);
     }
 
+    /**
+     * 修改密码
+     *
+     * @param newPwd
+     * @param id
+     */
     public void chgPwd(String newPwd, String id) {
-        try {
-            ChgPwdDTO dto = new ChgPwdDTO();
-            dto.setNewPwd(newPwd);
-            dto.setSalesmanId(id);
-            salesmanMapper.chgPwd(dto);
-        } catch (Exception e) {
-            log.error("销售人员重置密码失败,newPwd={},id={},exception={}", newPwd, id, e);
-            throw new SalesmanException(ResultEnum.SALESMANINFO_DEL_FAIL);
-        }
+        ChgPwdDTO dto = new ChgPwdDTO();
+        dto.setNewPwd(newPwd);
+        dto.setSalesmanId(id);
+        salesmanMapper.chgPwd(dto);
     }
 
     public SalesmanInfo getSalesmanInfoByPhone(String phone) {
@@ -133,8 +118,86 @@ public class SalesmanManage {
         return result;
     }
 
+    /**
+     * 根据用户名查询用户信息
+     *
+     * @param username
+     * @return
+     */
     public SalesmanInfo getSalesmanInfoByUsername(String username) {
         SalesmanInfo result = salesmanMapper.getSalesmanInfoByUsername(username);
         return result;
+    }
+
+    /**
+     * 根据条件查询销售信息
+     *
+     * @param username
+     * @param name
+     * @param phone
+     * @return
+     */
+    public SalesmanInfo getSalesmanInfoByQuery(String username, String name, String phone) {
+        SalesmanInfoQueryPO po = new SalesmanInfoQueryPO();
+        po.setUsername(username);
+        po.setPhone(phone);
+        po.setName(name);
+        SalesmanInfo result = salesmanMapper.getSalesmanInfoByQuery(po);
+        return result;
+    }
+
+    /**
+     * 查詢所有的銷售信息
+     *
+     * @return
+     */
+    public List<SalesmanInfo> findAll() {
+        return salesmanMapper.findAll();
+    }
+
+    /**
+     * 根据手机号码查询客户信息
+     *
+     * @param phone
+     * @return
+     */
+    public CustomerInfo getCustomerInfoByPhone(String phone) {
+        return salesmanMapper.getCustomerInfoByPhone(phone);
+    }
+
+    /**
+     * 根据id获取客户信息
+     *
+     * @param id
+     * @return
+     */
+    public CustomerInfo getCustomerInfoById(String id) {
+        return salesmanMapper.getCustomerInfoById(id);
+    }
+
+    /**
+     * 添加客户信息
+     *
+     * @param info
+     */
+    public void addCustomerInfo(CustomerInfoForm info) {
+        salesmanMapper.addCustomerInfo(info);
+    }
+
+    /**
+     * 分页客户信息列表
+     *
+     * @return
+     */
+    public PageQuery<CustomerInfo> list(CustomerListPagePO po) {
+        return PageResolve.page(po, c -> salesmanMapper.customerInfoListCount(po), l -> salesmanMapper.customerInfoList(po));
+    }
+
+    public void delCustomerInfoById(String id) {
+        salesmanMapper.delCustomerInfoById(id);
+    }
+
+    public void editCustomerInfo(CustomerInfoForm info) {
+        salesmanMapper.editCustomerInfo(info);
     }
 }
