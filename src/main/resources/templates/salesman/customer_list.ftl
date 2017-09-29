@@ -17,7 +17,16 @@
                             <th>客户性别</th>
                             <th>客户电话</th>
                             <th>接待销售</th>
-                            <th colspan="4">操作</th>
+                        <#if isMySelf==1>
+                        <#--本人操作，有删除按钮-->
+                            <th colspan="3">客户内容</th>
+                            <th colspan="2">客户追踪</th>
+                        <#else >
+                        <#--非本人操作，无删除按钮-->
+                            <th colspan="1">客户内容</th>
+                            <th colspan="1">客户追踪</th>
+                        </#if>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -29,9 +38,14 @@
                                 <td>${dto.phone}</td>
                                 <td>${dto.salesmanName}</td>
                                 <td><a href="/salesman/customerInfoDetail?id=${dto.id}">客户详情</a></td>
-                                <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
-                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
-                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">客户信息追踪</a></td>
+                                <#if isMySelf==1>
+                                    <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
+                                    <td><a href="/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
+                                    <td><a href="/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a></td>
+                                    <td><a href="/salesman/toAddCustomerTrackInfo?customerInfoId=${dto.id}">新增</a></td>
+                                <#else >
+                                    <td><a href="/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a></td>
+                                </#if>
                             </tr>
                             </#list>
                         </#if>

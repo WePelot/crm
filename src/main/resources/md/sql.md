@@ -57,7 +57,7 @@ create table `customer_info` (
 create table `customer_track_info` (
     `id` varchar(64) not null,
     `customer_info_id` varchar(64) comment '客户信息ID' not null,
-    `desc` varchar(64) not null comment '具体事项',
+    `desc` varchar(300) not null comment '具体事项',
     `deleted` int(3) not null default 0  comment '是否删除，0为未删除，1为已删除',
     `create_time` timestamp not null default current_timestamp comment '创建时间',
     `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',

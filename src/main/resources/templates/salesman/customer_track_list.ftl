@@ -9,6 +9,11 @@
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="row clearfix">
+            <#if isMySelf==1>
+                <div class="col-md-12 column" style="margin-bottom: 15px;">
+                    <a class="btn btn-default" href="/salesman/toAddCustomerTrackInfo?customerInfoId=${customerInfoId}">客户追踪信息添加</a>
+                </div>
+            </#if>
                 <div class="col-md-12 column">
                     <table class="table table-bordered table-condensed">
                         <thead>
@@ -16,7 +21,9 @@
                             <th>客户姓名</th>
                             <th>录入时间</th>
                             <th>具体事项</th>
+                        <#if isMySelf==1>
                             <th colspan="1">操作</th>
+                        </#if>
                         </tr>
                         </thead>
                         <tbody>
@@ -26,9 +33,11 @@
                                 <td>${dto.customerInfoName}</td>
                                 <td>${dto.createTime}</td>
                                 <td>${dto.desc}</td>
-                                <td>
-                                    <a href="/salesman/delCustomerTrackInfo?customerTrackInfoId=${dto.id}&customerInfoId=${dto.customerInfoId}">删除</a>
-                                </td>
+                                <#if isMySelf==1>
+                                    <td>
+                                        <a href="/salesman/delCustomerTrackInfo?customerTrackInfoId=${dto.id}&customerInfoId=${dto.customerInfoId}">删除</a>
+                                    </td>
+                                </#if>
                             </tr>
                             </#list>
                         </#if>

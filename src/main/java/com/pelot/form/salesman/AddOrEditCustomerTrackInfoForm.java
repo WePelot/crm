@@ -7,9 +7,8 @@
  */
 package com.pelot.form.salesman;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import lombok.Data;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 客户最终信息添加

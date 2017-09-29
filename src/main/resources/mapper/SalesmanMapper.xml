@@ -13,7 +13,7 @@
             deleted = 0
             <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
-                and identity = #{identity} AND id = #{salesmanId} and belong = #{belong}
+                AND (id = #{salesmanId} OR belong = #{belong})
             </if>
         </where>
         limit #{start}, #{pageSize}
@@ -26,7 +26,7 @@
             deleted = 0
             <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
-                and identity = #{identity} AND id = #{salesmanId}
+                AND (id = #{salesmanId} OR belong = #{belong})
             </if>
         </where>
     </select>
@@ -222,7 +222,7 @@
         from customer_info a
         LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
         ON a.salesmanId = c.salesmanId
-        WHERE a.deleted = 0
+        WHERE a.deleted = 0 and a.salesmanId = #{salesmanId}
         limit #{start}, #{pageSize}
     </select>
 
@@ -232,7 +232,7 @@
         SELECT count(*) from customer_info a
           LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
           ON a.salesmanId = c.salesmanId
-          WHERE a.deleted = 0
+        WHERE a.deleted = 0 and a.salesmanId = #{salesmanId}
     </select>
 
     <update id="editCustomerInfo" parameterType="com.pelot.form.salesman.CustomerInfoForm">
@@ -269,20 +269,26 @@
 
     <insert id="addCustomerTrackInfo" parameterType="com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm">
         INSERT INTO `customer_track_info` (`id`,`customer_info_id` ,`desc`)
-          VALUES(uuid().#{customerInfoId},#{desc})
+        VALUES(uuid(),#{customerInfoId},#{desc})
     </insert>
 
     <update id="delCustomerTrackInfo" parameterType="java.lang.String">
         UPDATE `customer_track_info`
           SET deleted = 1
-          WHERE id = #{customerTrackInfoId}
+        WHERE customer_info_id = #{customerTrackInfoId}
+    </update>
+
+    <update id="delCustomerTrackInfoByCustomerInfoId" parameterType="java.lang.String">
+        UPDATE `customer_track_info`
+        SET deleted = 1
+        WHERE id = #{customerInfoId}
     </update>
 
     <select id="getCustomerTrackInfoById" parameterType="java.lang.String" resultType="com.pelot.mapper.salesman.dataobject.CustomerTrackInfo">
         SELECT
             a.`id` AS id,
             a.`customer_info_id` AS customerInfoId,
-            b.`customer_info_name` AS customerInfoName,
+        b.`name` AS customerInfoName,
             a.`desc` AS 'desc',
             a.`create_time` as createTime
         from customer_track_info a LEFT JOIN customer_info b
@@ -297,16 +303,18 @@
     </update>
 
 
-    <select id="customerTrackInfoList" parameterType="java.lang.String" resultType="com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO">
+    <select id="customerTrackInfoList" parameterType="com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO"
+            resultType="com.pelot.mapper.salesman.dataobject.CustomerTrackInfo">
         SELECT
         a.`id` AS id,
         a.`customer_info_id` AS customerInfoId,
-        b.`customer_info_name` AS customerInfoName,
+        b.`name` AS customerInfoName,
         a.`desc` AS 'desc',
         a.`create_time` as createTime
         from customer_track_info a LEFT JOIN customer_info b
         ON a.customer_info_id = b.id
         WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
+        ORDER BY createTime DESC
         limit #{start}, #{pageSize}
     </select>
 
@@ -317,10 +325,11 @@
     </select>
 
 
-    <select id="statistics" parameterType="java.lang.String" resultType="java.lang.Integer">
-        SELECT COUNT(*)
-        from customer_track_info a
-        WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
-    </select>
+    <!--<select id="statistics" parameterType="java.lang.String"-->
+    <!--resultType="com.pelot.mapper.salesman.dataobject.StatisticsResult">-->
+    <!--SELECT COUNT(*)-->
+    <!--from customer_track_info a-->
+    <!--WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}-->
+    <!--</select>-->
 
 </mapper>

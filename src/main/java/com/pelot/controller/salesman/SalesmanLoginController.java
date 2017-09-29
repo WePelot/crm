@@ -9,9 +9,7 @@ package com.pelot.controller.salesman;
 
 import com.pelot.constant.CookieConstant;
 import com.pelot.enums.ResultEnum;
-import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 import com.pelot.service.salesman.SalesmanLoginService;
 import com.pelot.service.salesman.SalesmanService;
@@ -69,21 +67,12 @@ public class SalesmanLoginController {
             String token = uuid + "_" + salesmanInfo.getId() + "_" + salesmanInfo.getIdentity() + "_" + salesmanInfo.getBelong();
             //3. 将token写入cookie
             CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
-            //查询条件
-            SalesmanListPagePO po = new SalesmanListPagePO();
-            po.setIdentity(salesmanInfo.getIdentity());
-            po.setSalesmanId(salesmanInfo.getId());
-            po.setBelong(salesmanInfo.getBelong());
-            PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
-            map.put("list", list);
-            map.put("currentPage", po.getPageNo());
-            map.put("size", po.getPageSize());
-            //3.设置成功后跳转增加销售人员列表的界面
-            return new ModelAndView("salesman/salesman_list", map);
+            map.put("errorMsg", ResultEnum.LOGIN_SUCCESS.getMsg());
+            map.put("redirectUrl", "/salesman/listCustomerInfo?salesmanId=" + salesmanInfo.getId());
+            //3.设置成功后跳转增加客户信息列表的界面
+            return new ModelAndView("common/success", map);
         } else {
             //用户名和密码不正确，转入错误页面
-
-            //设置失败后跳转列表页
             map.put("errorMsg", ResultEnum.LOGIN_FAIL.getMsg());
             map.put("redirectUrl", "/html/salesman/login.html");
             return new ModelAndView("common/error", map);

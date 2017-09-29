@@ -15,20 +15,12 @@ import com.pelot.mapper.salesman.SalesmanMapper;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.CustomerListPagePO;
-import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
-
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import com.pelot.mapper.salesman.query.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author hongcj
@@ -268,4 +260,7 @@ public class SalesmanManage {
         salesmanMapper.editCustomerTrackInfo(info);
     }
 
+    public void delCustomerTrackInfoByCustomerInfoId(String customerInfoId) {
+        salesmanMapper.delCustomerTrackInfoByCustomerInfoId(customerInfoId);
+    }
 }

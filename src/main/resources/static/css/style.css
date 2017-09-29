@@ -307,3 +307,12 @@ html {
     display: block;
     opacity: 1;
 }
+
+textarea.my_textarea {
+    width: 50%;
+    height: 90px;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+}

@@ -6,12 +6,22 @@
             </a>
         </li>
         <li>
+            <a href="/salesman/listCustomerInfo"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
+        </li>
+
+        <li>
+            <a href="/salesman/toAddCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
+        </li>
+
+    <#if identity != 0>
+        <li>
             <a href="/salesman/listSalesmanInfo?pageNo=1&pageSize=20"><i class="fa fa-fw fa-list-alt"></i>销售人员列表</a>
         </li>
 
         <li>
             <a href="/salesman/toAddSalesman"><i class=" fa fa-fw fa-list-alt"></i>新增销售人员</a>
         </li>
+    </#if>
 
         <li>
             <a href="/salesman/detail"><i class=" fa fa-fw fa-list-alt"></i>个人信息查询</a>
@@ -23,14 +33,6 @@
 
         <li>
             <a href="/salesman/toChgPwd"><i class=" fa fa-fw fa-list-alt"></i>密码修改</a>
-        </li>
-
-        <li>
-            <a href="/salesman/listCustomerInfo"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
-        </li>
-
-        <li>
-            <a href="/salesman/toAddCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
         </li>
 
         <li>

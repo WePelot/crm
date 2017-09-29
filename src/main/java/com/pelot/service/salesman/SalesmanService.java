@@ -20,16 +20,14 @@ import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.utils.StringCommonUtil;
-
-import java.util.List;
-import java.util.Objects;
-
-import javax.annotation.Resource;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 销售人员登录
@@ -126,9 +124,12 @@ public class SalesmanService {
         return result;
     }
 
+    @Transactional
     public void delCustomerInfoById(String id) {
         try {
             salesmanManage.delCustomerInfoById(id);
+            //删除客户追踪信息
+            salesmanManage.delCustomerTrackInfoByCustomerInfoId(id);
         } catch (Exception e) {
             log.error("删除客户信息失败,id={},excetpion={}", id, e);
             throw new SalesmanException(ResultEnum.CUSTOMERINFO_DEL_FAIL);

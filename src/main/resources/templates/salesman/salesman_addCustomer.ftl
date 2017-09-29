@@ -13,15 +13,6 @@
         div.label-radio label {
             margin-right: 10px;
         }
-
-        textarea {
-            width: 50%;
-            height: 90px;
-            color: #555;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: none;
-        }
     </style>
 <#--主要内容content-->
     <div id="page-content-wrapper">
@@ -611,9 +602,7 @@
                         <div class="form-group">
                             <div class="label-radio">
                                 <label class="col-sm-2 control-label">客户描述</label>
-                                <textarea name="desc" maxlength="100">
-
-                                </textarea>
+                                <textarea name="desc" maxlength="100" class="my_textarea"></textarea>
                             </div>
                         </div>
 

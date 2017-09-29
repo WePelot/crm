@@ -13,12 +13,7 @@ import com.pelot.mapper.common.PagePO;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.CustomerListPagePO;
-import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+import com.pelot.mapper.salesman.query.*;
 
 import java.util.List;
 
@@ -210,6 +205,13 @@ public interface SalesmanMapper {
      * @param customerTrackInfoId
      */
     void delCustomerTrackInfo(String customerTrackInfoId);
+
+    /**
+     * 删除客户追踪信息
+     *
+     * @param customerInfoId
+     */
+    void delCustomerTrackInfoByCustomerInfoId(String customerInfoId);
 
     /**
      * 根据id获取客户追踪信息

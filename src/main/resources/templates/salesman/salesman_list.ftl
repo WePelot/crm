@@ -17,7 +17,13 @@
                             <th>姓名</th>
                             <th>手机</th>
                             <th>身份</th>
+                        <#if identity==2>
+                        <#--总负责人，拥有重置密码的功能-->
+                            <th colspan="3">操作</th>
+                        <#else >
                             <th colspan="2">操作</th>
+                        </#if>
+
                         </tr>
                         </thead>
                         <tbody>
@@ -28,8 +34,11 @@
                                 <td>${dto.name}</td>
                                 <td>${dto.phone}</td>
                                 <td>${dto.getSalesmanInfoIdentityEnum().msg}</td>
-                                <td><a href="/salesman/detail?id=${dto.id}">详情</a></td>
+                                <td><a href="/salesman/detail?id=${dto.id}">个人信息详情</a></td>
+                                <td><a href="/salesman/listCustomerInfo?salesmanId=${dto.id}">客户信息列表</a></td>
+                                <#if identity==2>
                                 <td><a href="/salesman/resetPwd?id=${dto.id}">密码重置</a></td>
+                                </#if>
                             </tr>
                             </#list>
                         </#if>
