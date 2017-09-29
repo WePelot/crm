@@ -35,8 +35,15 @@
             <a href="/salesman/toChgPwd"><i class=" fa fa-fw fa-list-alt"></i>密码修改</a>
         </li>
 
+    <#if identity == 2>
+        <li>
+            <a href="/salesman/toChgPwd"><i class=" fa fa-fw fa-list-alt"></i>统计</a>
+        </li>
+    </#if>
+
         <li>
             <a href="/user/logout"><i class="fa fa-fw fa-list-alt"></i> 登出</a>
         </li>
+
     </ul>
 </nav>
