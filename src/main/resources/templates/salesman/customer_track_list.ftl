@@ -14,24 +14,21 @@
                         <thead>
                         <tr>
                             <th>客户姓名</th>
-                            <th>客户性别</th>
-                            <th>客户电话</th>
-                            <th>接待销售</th>
-                            <th colspan="4">操作</th>
+                            <th>录入时间</th>
+                            <th>具体事项</th>
+                            <th colspan="1">操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         <#if list.data?exists>
                             <#list list.data as dto>
                             <tr>
-                                <td>${dto.name}</td>
-                                <td>${dto.sex}</td>
-                                <td>${dto.phone}</td>
-                                <td>${dto.salesmanName}</td>
-                                <td><a href="/salesman/customerInfoDetail?id=${dto.id}">客户详情</a></td>
-                                <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
-                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
-                                <td><a href="/salesman/delCustomerInfo?id=${dto.id}">客户信息追踪</a></td>
+                                <td>${dto.customerInfoName}</td>
+                                <td>${dto.createTime}</td>
+                                <td>${dto.desc}</td>
+                                <td>
+                                    <a href="/salesman/delCustomerTrackInfo?customerTrackInfoId=${dto.id}&customerInfoId=${dto.customerInfoId}">删除</a>
+                                </td>
                             </tr>
                             </#list>
                         </#if>
@@ -43,7 +40,8 @@
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
-                        <li><a href="/salesman/list?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
+                        <li>
+                            <a href="/salesman/listCustomerTrackInfo?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
                         </li>
                     </#if>
                     <#list 1..list.getTotalPage() as index>
@@ -51,15 +49,14 @@
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
                             <li class=><a
-                                    href="/salesman/list?pageNo=${index}&pageSize=${size}&salesmanId=${salesmanId}">${index}</a>
+                                    href="/salesman/listCustomerTrackInfo?pageNo=${index}&pageSize=${size}">${index}</a>
                             </li>
                         </#if>
                     </#list>
                     <#if currentPage gte list.getTotalPage()>
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
-                        <li>
-                            <a href="/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}&salesmanId=${salesmanId}">下一页</a>
+                        <li><a href="/salesman/listCustomerTrackInfo?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a>
                         </li>
                     </#if>
                     </ul>

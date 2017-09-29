@@ -416,6 +416,7 @@ public class SalesmanController extends BaseController {
         //在查询时会将page减1，所以这里需要加1
         map.put("currentPage", po.getPageNo() + 1);
         map.put("size", po.getPageSize());
+        map.put("salesmanId", po.getSalesmanId());
         return new ModelAndView("salesman/customer_list", map);
     }
 
@@ -478,6 +479,7 @@ public class SalesmanController extends BaseController {
         //在查询时会将page减1，所以这里需要加1
         map.put("currentPage", po.getPageNo() + 1);
         map.put("size", po.getPageSize());
+        map.put("customerInfoId", po.getCustomerInfoId());
         return new ModelAndView("salesman/customer_track_list", map);
     }
 
