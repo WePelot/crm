@@ -5,33 +5,43 @@ import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
+import com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm;
 import com.pelot.form.salesman.AddSalesmanInfoForm;
 import com.pelot.form.salesman.ChgPwdForm;
 import com.pelot.form.salesman.ChgSalesmanInfoForm;
 import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
+import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.CustomerListPagePO;
+import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
 import com.pelot.utils.CookieUtil;
 import com.pelot.utils.ResultVOUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 销售人员的操作控制
@@ -444,13 +454,109 @@ public class SalesmanController extends BaseController {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
-//            customerInfo.setDesc("1");
             map.put("customerInfo", customerInfo);
             map.put("salesmanName", salesmanInfo.getName());
             return new ModelAndView("salesman/customer_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
             map.put("redirectUrl", "/salesman/listCustomerInfo");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+    /**
+     * 获取客户追踪信息集合
+     *
+     * @param po
+     * @return
+     */
+    @GetMapping("/listCustomerTrackInfo")
+    public ModelAndView listCustomerTrackInfo(CustomerTrackInfoListPagePO po) {
+        PageQuery<CustomerTrackInfo> list = salesmanService.listCustomerTrackInfo(po);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", list);
+        //在查询时会将page减1，所以这里需要加1
+        map.put("currentPage", po.getPageNo() + 1);
+        map.put("size", po.getPageSize());
+        return new ModelAndView("salesman/customer_track_list", map);
+    }
+
+    /**
+     * 新增客户信息
+     *
+     * @param info
+     * @param bindingResult
+     * @param map
+     * @return
+     */
+    @PostMapping("/saveCustomerTrackInfo")
+    public ModelAndView saveCustomerTrackInfo(@Valid AddOrEditCustomerTrackInfoForm info, BindingResult bindingResult,
+        Map<String, Object> map) {
+        try {
+            if (bindingResult.hasErrors()) {
+                throw new SalesmanException(ResultEnum.PARAM_ERROR);
+            }
+            if (StringUtils.isEmpty(info.getCustomerInfoId())) {
+                //为空，说明为新增
+                salesmanService.addCustomerTrackInfo(info);
+                map.put("errorMsg", "添加成功");
+            } else {
+                //不为空，修改
+                //先判断对应的id是否存在
+                CustomerInfo customerInfoById = salesmanService.getCustomerInfoById(info.getCustomerInfoId());
+                if (Objects.nonNull(customerInfoById)) {
+                    salesmanService.editCustomerTrackInfo(info);
+                }
+                map.put("errorMsg", "修改成功");
+            }
+            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+    /**
+     * 删除客户追踪信息
+     *
+     * @param customerTrackInfoId
+     * @param map
+     * @return
+     */
+    @GetMapping("/delCustomerTrackInfo")
+    public ModelAndView delCustomerTrackInfo(@RequestParam String customerTrackInfoId,
+        @RequestParam String customerInfoId, Map<String, Object> map) {
+        try {
+            CustomerTrackInfo customerTrackInfoById = salesmanService.getCustomerTrackInfoById(customerTrackInfoId);
+            salesmanService.delCustomerTrackInfo(customerTrackInfoById.getId());
+            map.put("errorMsg", "删除成功");
+            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
+            return new ModelAndView("common/success", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
+            return new ModelAndView("common/error", map);
+        }
+    }
+
+    /**
+     * 客户追踪信息详情
+     *
+     * @param map
+     * @return
+     */
+    @GetMapping("/customerTrackInfoDetail")
+    public ModelAndView customerTrackInfoDetail(@RequestParam String customerTrackInfoId,
+        @RequestParam String customerInfoId, Map<String, Object> map) {
+        try {
+            CustomerTrackInfo customerTrackInfo = salesmanService.getCustomerTrackInfoById(customerTrackInfoId);
+            map.put("customerTrackInfo", customerTrackInfo);
+            return new ModelAndView("salesman/customer_track_info_detail", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
             return new ModelAndView("common/error", map);
         }
     }

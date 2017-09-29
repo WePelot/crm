@@ -9,20 +9,27 @@ package com.pelot.service.salesman;
 
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
+import com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm;
 import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.manage.SalesmanManage;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
+import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.CustomerListPagePO;
+import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import lombok.extern.slf4j.Slf4j;
+import com.pelot.utils.StringCommonUtil;
+
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 销售人员登录
@@ -116,7 +123,7 @@ public class SalesmanService {
         if (Objects.isNull(result)) {
             throw new SalesmanException(ResultEnum.SALESMANINFO_NOT_EXIST);
         }
-        return salesmanManage.getCustomerInfoById(id);
+        return result;
     }
 
     public void delCustomerInfoById(String id) {
@@ -131,7 +138,7 @@ public class SalesmanService {
     public void addCustomerInfo(CustomerInfoForm info) {
         try {
             if (!StringUtils.isEmpty(info.getDesc())) {
-                info.setDesc(info.getDesc().replace("/(^\\s*)|(\\s*$)/g", ""));
+                info.setDesc(StringCommonUtil.replaceBlank(info.getDesc()));
             }
             salesmanManage.addCustomerInfo(info);
         } catch (Exception e) {
@@ -143,7 +150,7 @@ public class SalesmanService {
     public void editCustomerInfo(CustomerInfoForm info) {
         try {
             if (!StringUtils.isEmpty(info.getDesc())) {
-                info.setDesc(info.getDesc().replace("/(^\\s*)|(\\s*$)/g", ""));
+                info.setDesc(StringCommonUtil.replaceBlank(info.getDesc()));
             }
             salesmanManage.editCustomerInfo(info);
         } catch (Exception e) {
@@ -151,4 +158,51 @@ public class SalesmanService {
             throw new SalesmanException(ResultEnum.CUSTOMERINFO_CHG_FAIL);
         }
     }
+
+    public void addCustomerTrackInfo(AddOrEditCustomerTrackInfoForm info) {
+        try {
+            if (!StringUtils.isEmpty(info.getDesc())) {
+                info.setDesc(StringCommonUtil.replaceBlank(info.getDesc()));
+            }
+            salesmanManage.addCustomerTrackInfo(info);
+        } catch (Exception e) {
+            log.error("新增客户追踪信息失败,info={},excetpion={}", info, e);
+            throw new SalesmanException(ResultEnum.CUSTOMER_TRACK_INFO_ADD_FAIL);
+        }
+    }
+
+    public void editCustomerTrackInfo(AddOrEditCustomerTrackInfoForm info) {
+        try {
+            if (!StringUtils.isEmpty(info.getDesc())) {
+                info.setDesc(StringCommonUtil.replaceBlank(info.getDesc()));
+            }
+            salesmanManage.editCustomerTrackInfo(info);
+        } catch (Exception e) {
+            log.error("修改客户追踪信息失败,info={},excetpion={}", info, e);
+            throw new SalesmanException(ResultEnum.CUSTOMER_TRACK_INFO_CHG_FAIL);
+        }
+    }
+
+    public void delCustomerTrackInfo(String customerTrackInfoId) {
+        try {
+            salesmanManage.delCustomerTrackInfo(customerTrackInfoId);
+        } catch (Exception e) {
+            log.error("删除客户追踪信息失败,customerTrackInfoId={},excetpion={}", customerTrackInfoId, e);
+            throw new SalesmanException(ResultEnum.CUSTOMER_TRACK_INFO_DEL_FAIL);
+        }
+    }
+
+    public CustomerTrackInfo getCustomerTrackInfoById(String customerTrackInfoId) {
+        CustomerTrackInfo result = salesmanManage.getCustomerTrackInfoById(customerTrackInfoId);
+        if (Objects.isNull(result)) {
+            throw new SalesmanException(ResultEnum.CUSTOMER_TRACK_INFO_NOT_EXIST);
+        }
+        return result;
+    }
+
+    public PageQuery<CustomerTrackInfo> listCustomerTrackInfo(CustomerTrackInfoListPagePO po) {
+        return salesmanManage.customerTrackInfoList(po);
+    }
+
+
 }

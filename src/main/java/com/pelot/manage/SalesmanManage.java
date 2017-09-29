@@ -7,18 +7,28 @@
  */
 package com.pelot.manage;
 
+import com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm;
 import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.common.PageResolve;
 import com.pelot.mapper.salesman.SalesmanMapper;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
+import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import com.pelot.mapper.salesman.query.ChgPwdDTO;
+import com.pelot.mapper.salesman.query.CustomerListPagePO;
+import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
+import com.pelot.mapper.salesman.query.SalesmanListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+
+import java.util.List;
 
 import javax.annotation.Resource;
-import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author hongcj
@@ -193,11 +203,69 @@ public class SalesmanManage {
         return PageResolve.page(po, c -> salesmanMapper.customerInfoListCount(po), l -> salesmanMapper.customerInfoList(po));
     }
 
+    /**
+     * 删除客户信息
+     *
+     * @param id
+     */
     public void delCustomerInfoById(String id) {
         salesmanMapper.delCustomerInfoById(id);
     }
 
+    /**
+     * 修改客户信息
+     *
+     * @param info
+     */
     public void editCustomerInfo(CustomerInfoForm info) {
         salesmanMapper.editCustomerInfo(info);
     }
+
+    /**
+     * 分页获取客户追踪信息列表
+     *
+     * @return
+     */
+    public PageQuery<CustomerTrackInfo> customerTrackInfoList(CustomerTrackInfoListPagePO po) {
+        return PageResolve.page(po, c -> salesmanMapper.customerTrackInfoListCount(po),
+            l -> salesmanMapper.customerTrackInfoList(po));
+    }
+
+    /**
+     * 增加客户追踪信息
+     *
+     * @param info
+     */
+    public void addCustomerTrackInfo(AddOrEditCustomerTrackInfoForm info) {
+        salesmanMapper.addCustomerTrackInfo(info);
+    }
+
+    /**
+     * 删除客户追踪信息
+     *
+     * @param customerTrackInfoId
+     */
+    public void delCustomerTrackInfo(String customerTrackInfoId) {
+        salesmanMapper.delCustomerTrackInfo(customerTrackInfoId);
+    }
+
+    /**
+     * 根据id获取客户追踪信息
+     *
+     * @param customerTrackInfoId
+     * @return
+     */
+    public CustomerTrackInfo getCustomerTrackInfoById(String customerTrackInfoId) {
+        return salesmanMapper.getCustomerTrackInfoById(customerTrackInfoId);
+    }
+
+    /**
+     * 修改客户追踪信息
+     *
+     * @param info
+     */
+    public void editCustomerTrackInfo(AddOrEditCustomerTrackInfoForm info) {
+        salesmanMapper.editCustomerTrackInfo(info);
+    }
+
 }

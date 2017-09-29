@@ -264,5 +264,56 @@
             `willingness` = #{willingness},
             `desc` = #{desc}
         WHERE id = #{id}
-      </update>
+    </update>
+
+
+    <insert id="addCustomerTrackInfo" parameterType="com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm">
+        INSERT INTO `customer_track_info` (`id`,`customer_info_id` ,`desc`)
+          VALUES(uuid().#{customerInfoId},#{desc})
+    </insert>
+
+    <update id="delCustomerTrackInfo" parameterType="java.lang.String">
+        UPDATE `customer_track_info`
+          SET deleted = 1
+          WHERE id = #{customerTrackInfoId}
+    </update>
+
+    <select id="getCustomerTrackInfoById" parameterType="java.lang.String" resultType="com.pelot.mapper.salesman.dataobject.CustomerTrackInfo">
+        SELECT
+            a.`id` AS id,
+            a.`customer_info_id` AS customerInfoId,
+            b.`customer_info_name` AS customerInfoName,
+            a.`desc` AS 'desc',
+            a.`create_time` as createTime
+        from customer_track_info a LEFT JOIN customer_info b
+          ON a.customer_info_id = b.id
+        WHERE a.id = #{customerTrackInfoId}
+    </select>
+
+    <update id="editCustomerTrackInfo" parameterType="com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm">
+        UPDATE `customer_track_info`
+          SET `desc` = #{desc}
+          WHERE id = #{customerTrackInfoId}
+    </update>
+
+
+    <select id="customerTrackInfoList" parameterType="java.lang.String" resultType="com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO">
+        SELECT
+        a.`id` AS id,
+        a.`customer_info_id` AS customerInfoId,
+        b.`customer_info_name` AS customerInfoName,
+        a.`desc` AS 'desc',
+        a.`create_time` as createTime
+        from customer_track_info a LEFT JOIN customer_info b
+        ON a.customer_info_id = b.id
+        WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
+        limit #{start}, #{pageSize}
+    </select>
+
+    <select id="customerTrackInfoListCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        from customer_track_info a
+        WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}
+    </select>
+
 </mapper>

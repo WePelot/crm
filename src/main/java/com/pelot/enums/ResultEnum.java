@@ -38,13 +38,21 @@ public enum ResultEnum {
 
     SALESMANINFO_CHGPWD_FAIL(10, "修改密码失败"),
 
-    CUSTOMERINFO_NOT_EXIST(11, "改客户信息不存在"),
+    CUSTOMERINFO_NOT_EXIST(11, "该客户信息不存在"),
 
     CUSTOMERINFO_DEL_FAIL(12, "删除客户信息失败"),
 
     CUSTOMERINFO_ADD_FAIL(13, "新增客户信息失败"),
 
-    CUSTOMERINFO_CHG_FAIL(14, "修改客户信息失败"),;
+    CUSTOMERINFO_CHG_FAIL(14, "修改客户信息失败"),
+
+    CUSTOMER_TRACK_INFO_NOT_EXIST(15, "该客户追踪信息不存在"),
+
+    CUSTOMER_TRACK_INFO_DEL_FAIL(16, "删除客户追踪信息失败"),
+
+    CUSTOMER_TRACK_INFO_ADD_FAIL(17, "新增客户追踪信息失败"),
+
+    CUSTOMER_TRACK_INFO_CHG_FAIL(18, "修改客户追踪信息失败"),;
 
 
     private Integer code;
