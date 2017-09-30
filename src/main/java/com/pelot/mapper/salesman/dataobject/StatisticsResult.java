@@ -19,6 +19,11 @@ import lombok.Data;
 @Data
 public class StatisticsResult {
     /**
+     * 组长ID
+     */
+    private String salesmanLeaderId;
+
+    /**
      * 组长名称
      */
     public String salesmanLeaderName;

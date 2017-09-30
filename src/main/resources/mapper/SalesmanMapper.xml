@@ -325,11 +325,73 @@
     </select>
 
 
-    <!--<select id="statistics" parameterType="java.lang.String"-->
-    <!--resultType="com.pelot.mapper.salesman.dataobject.StatisticsResult">-->
-    <!--SELECT COUNT(*)-->
-    <!--from customer_track_info a-->
-    <!--WHERE a.deleted = 0 and a.customer_info_id = #{customerInfoId}-->
-    <!--</select>-->
+    <select id="statistics" parameterType="java.lang.String">
+        SELECT
+        g.id as salesmanLeaderId ,
+        g. NAME as salesmanLeaderName,
+        IFNULL(l.salesman_count, 0) as salesmanCount,
+        u.customer_info_count as customerCount
+        FROM
+        salesman_info g
+        LEFT JOIN (
+        SELECT
+        k.belong,
+        COUNT(1) AS salesman_count
+        FROM
+        salesman_info k
+        WHERE
+        deleted = 0
+        GROUP BY
+        belong
+        ) AS l ON g.id = l.belong
+        LEFT JOIN (
+        SELECT
+        e.id,
+        count(f.customer_info_id) AS customer_info_count
+        FROM
+        (
+        SELECT
+        a.id,
+        a.`name`,
+        b.salesmanid,
+        b.customer_info_id
+        FROM
+        salesman_info a
+        LEFT JOIN (
+        SELECT
+        salesmanid,
+        id AS customer_info_id
+        FROM
+        customer_info
+        ) AS b ON b.salesmanid = a.id
+        WHERE
+        identity = 1
+        ) e
+        LEFT JOIN (
+        SELECT
+        c.id,
+        c.belong,
+        c.`name`,
+        d.salesmanid,
+        d.customer_info_id
+        FROM
+        salesman_info c
+        RIGHT JOIN (
+        SELECT
+        salesmanid,
+        id AS customer_info_id
+        FROM
+        customer_info
+        ) AS d ON d.salesmanid = c.id
+        WHERE
+        identity = 0
+        ) f ON e.id = f.belong
+        GROUP BY
+        e.id
+        ) u ON g.id = u.id
+        WHERE
+        g.identity = 1
+        AND g.deleted = 0
+    </select>
 
 </mapper>
