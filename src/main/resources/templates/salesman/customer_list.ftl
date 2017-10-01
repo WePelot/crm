@@ -10,6 +10,19 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
+                    <form class="form-horizontal" role="form" action="/salesman/listCustomerInfo" method="get">
+                        <div class="form-group">
+                            <label for="name" class="col-sm-2 control-label" p>客户姓名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="name" name="name" "/>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary">查询</button>
+                            </div>
+                        </div>
+                    </form>
+
+
                     <table class="table table-bordered table-condensed">
                         <thead>
                         <tr>

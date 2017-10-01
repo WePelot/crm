@@ -11,6 +11,7 @@
         SELECT * from salesman_info
         <where>
             deleted = 0
+            <![CDATA[and identity <> 2]]>
             <if test="identity==1">
                 -- 销售组长，可以查看自己手下销售的信息
                 AND belong = #{belong}
@@ -24,6 +25,7 @@
         SELECT COUNT(*) from salesman_info
         <where>
             deleted = 0
+            <![CDATA[and identity <> 2]]>
             <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
                 AND belong = #{belong}
@@ -76,8 +78,9 @@
         SELECT * from salesman_info
           WHERE deleted = 0
             and username = #{username}
-            and name = #{name}
-            and phone = #{phone}
+        or name = #{name}
+        or phone = #{phone}
+        limit 0,1
     </select>
 
     <select id="findAll" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
@@ -252,7 +255,7 @@
         )
         ) AS c ON a.salesmanid = c.id
         AND a.deleted = 0
-        <if test="name!=null and null!=''">
+        <if test="name != null and name!=''">
             and a.name like ${name}
         </if>
         ) d
@@ -280,7 +283,7 @@
             OR b.belong = #{salesmanId})
         </if>
         ) AS c ON a.salesmanid = c.id and a.deleted = 0
-        <if test="name!=null and null!=''">
+        <if test="name != null and name!=''">
             and a.name like ${name}
         </if>) d
         WHERE d.id is not null
@@ -378,10 +381,10 @@
 
     <select id="statistics" resultType="com.pelot.mapper.salesman.dataobject.StatisticsResult">
         SELECT
-        g.id as salesmanLeaderId ,
-        g. NAME as salesmanLeaderName,
-        IFNULL(l.salesman_count, 0) as salesmanCount,
-        u.customer_info_count as customerCount
+        g.id AS salesmanLeaderId,
+        g. NAME AS salesmanLeaderName,
+        IFNULL(l.salesman_count, 0) AS salesmanCount,
+        u.customer_info_count AS customerCount
         FROM
         salesman_info g
         LEFT JOIN (
@@ -414,6 +417,7 @@
         id AS customer_info_id
         FROM
         customer_info
+        WHERE deleted = 0
         ) AS b ON b.salesmanid = a.id
         WHERE
         identity = 1
@@ -433,6 +437,7 @@
         id AS customer_info_id
         FROM
         customer_info
+        WHERE deleted = 0
         ) AS d ON d.salesmanid = c.id
         WHERE
         identity = 0

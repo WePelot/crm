@@ -118,7 +118,7 @@ public class SalesmanService {
 
     public PageQuery<CustomerInfo> listCustomerInfo(CustomerListPagePO po) {
         if (!StringUtils.isEmpty(po.getName())) {
-            po.setName(StringCommonUtil.replaceBlank(po.getName()));
+            //            po.setName(StringCommonUtil.replaceBlank(po.getName()));
             po.setName("'%" + po.getName() + "%'");
         }
         return salesmanManage.list(po);

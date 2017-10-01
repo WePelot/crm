@@ -4,6 +4,12 @@ spring:
     username: root
     password: 123456
     url: jdbc:mysql://127.0.0.1/crm?characterEncoding=utf-8&useSSL=false
+  http:
+    encoding:
+      charset: utf-8
+      force: true
+      enabled: true
+
 #项目路径
 projectUrl:
   crm: http://127.0.0.0
@@ -17,3 +23,9 @@ logging:
     console: "%d -%msg%n"
   file: "E:/logs/crm/crm.log"
   level: info
+
+
+#因使用的为外置tomcat，这个设置无用，需要在外置的tomcat里设置
+#server:
+#  tomcat:
+#    uri-encoding: UTF-8

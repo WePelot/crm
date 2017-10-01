@@ -412,6 +412,7 @@ public class SalesmanController extends BaseController {
     public ModelAndView listCustomerInfo(CustomerListPagePO po) {
         Map<String, Object> map = new HashMap<>();
         map.put("identity", getIdentity());
+        //        map.put("name", po.getName());
         po.setSalesmanId(getUserId());
         po.setIdentity(getIdentity());
         PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);
@@ -500,13 +501,6 @@ public class SalesmanController extends BaseController {
     public ModelAndView listCustomerTrackInfo(CustomerTrackInfoListPagePO po) {
         Map<String, Object> map = new HashMap<>();
         try {
-            CustomerInfo customerInfo = salesmanService.getCustomerInfoById(po.getCustomerInfoId());
-            String salesmanId = customerInfo.getSalesmanId();
-            if (getUserId().equals(salesmanId)) {
-                map.put("isMySelf", 1);
-            } else {
-                map.put("isMySelf", 0);
-            }
             PageQuery<CustomerTrackInfo> list = salesmanService.listCustomerTrackInfo(po);
             map.put("list", list);
             //在查询时会将page减1，所以这里需要加1
