@@ -26,6 +26,11 @@ public class CustomerInfo {
     private String salesmanName;
 
     /**
+     * 销售对应的上级的姓名
+     */
+    private String salesmanLeaderName;
+
+    /**
      * 接待时间
      */
     private String receptionTime;

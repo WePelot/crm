@@ -30,6 +30,16 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="receptionTime" class="col-sm-2 control-label">销售组长</label>
+                            <div class="col-sm-6 column">
+                                <input type="text" class="form-control" id="salesmanLeaderName"
+                                       name="salesmanLeaderName"
+                                       value="${salesmanLeaderName}"
+                                       readonly="readonly">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="receptionTime" class="col-sm-2 control-label">接待时间</label>
                             <div class="col-sm-6 column">
                                 <input type="text" class="form-control" id="receptionTime" name="receptionTime"

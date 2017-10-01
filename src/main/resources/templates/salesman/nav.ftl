@@ -9,9 +9,11 @@
             <a href="/salesman/listCustomerInfo"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
         </li>
 
+    <#if identity == 0>
         <li>
             <a href="/salesman/toAddCustomer"><i class=" fa fa-fw fa-list-alt"></i>新增客戶信息</a>
         </li>
+    </#if>
 
     <#if identity != 0>
         <li>
@@ -37,7 +39,7 @@
 
     <#if identity == 2>
         <li>
-            <a href="/salesman/toChgPwd"><i class=" fa fa-fw fa-list-alt"></i>统计</a>
+            <a href="/salesman/statistics"><i class=" fa fa-fw fa-list-alt"></i>统计</a>
         </li>
     </#if>
 

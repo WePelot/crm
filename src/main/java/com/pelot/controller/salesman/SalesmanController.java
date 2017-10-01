@@ -5,32 +5,44 @@ import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
-import com.pelot.form.salesman.*;
+import com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm;
+import com.pelot.form.salesman.AddSalesmanInfoForm;
+import com.pelot.form.salesman.ChgPwdForm;
+import com.pelot.form.salesman.ChgSalesmanInfoForm;
+import com.pelot.form.salesman.CustomerInfoForm;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.dataobject.StatisticsResult;
 import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
 import com.pelot.utils.CookieUtil;
 import com.pelot.utils.ResultVOUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 销售人员的操作控制
@@ -384,7 +396,8 @@ public class SalesmanController extends BaseController {
         if (Objects.isNull(customerInfoByPhone)) {
             return ResultVOUtil.success();
         } else {
-            return ResultVOUtil.error(-1, "该手机号码已存在");
+            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(customerInfoByPhone.getSalesmanId());
+            return ResultVOUtil.error(-1, "该手机号码对应的客户已被销售: " + salesmanInfo.getName() + "添加");
         }
     }
 
@@ -399,19 +412,8 @@ public class SalesmanController extends BaseController {
     public ModelAndView listCustomerInfo(CustomerListPagePO po) {
         Map<String, Object> map = new HashMap<>();
         map.put("identity", getIdentity());
-        if (StringUtils.isEmpty(po.getSalesmanId())) {
-            //如果没有填id，则代表为本人查询
-            po.setSalesmanId(getUserId());
-            //如果为本人的话，可以删除自己本人的客户信息
-            map.put("isMySelf", 1);
-        } else {
-            if (po.getSalesmanId().equals(getUserId())) {
-                map.put("isMySelf", 1);
-            } else {
-                //非本人操作
-                map.put("isMySelf", 0);
-            }
-        }
+        po.setSalesmanId(getUserId());
+        po.setIdentity(getIdentity());
         PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);
         map.put("list", list);
         //在查询时会将page减1，所以这里需要加1
@@ -456,9 +458,10 @@ public class SalesmanController extends BaseController {
     public ModelAndView customerInfoDetail(@RequestParam(value = "id", required = false) String id, Map<String, Object> map) {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
-            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(getUserId());
+            SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoWithLeadById(customerInfo.getSalesmanId());
             map.put("customerInfo", customerInfo);
             map.put("salesmanName", salesmanInfo.getName());
+            map.put("salesmanLeaderName", salesmanInfo.getSalesmanLeaderName());
             map.put("identity", getIdentity());
             return new ModelAndView("salesman/customer_detail", map);
         } catch (SalesmanException e) {
@@ -599,6 +602,27 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("common/error", map);
         }
     }
+
+    /**
+     * 销售信息统计
+     *
+     * @param map
+     * @return
+     */
+    @GetMapping("/statistics")
+    public ModelAndView statistics(Map<String, Object> map) {
+        try {
+            List<StatisticsResult> list = salesmanService.statistics();
+            map.put("list", list);
+            map.put("identity", getIdentity());
+            return new ModelAndView("salesman/statistics", map);
+        } catch (SalesmanException e) {
+            map.put("errorMsg", e.getMessage());
+            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            return new ModelAndView("common/error", map);
+        }
+    }
+
 
 
 }

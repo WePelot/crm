@@ -15,12 +15,21 @@ import com.pelot.mapper.salesman.SalesmanMapper;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
-import com.pelot.mapper.salesman.query.*;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import com.pelot.mapper.salesman.dataobject.StatisticsResult;
+import com.pelot.mapper.salesman.query.ChgPwdDTO;
+import com.pelot.mapper.salesman.query.CustomerListPagePO;
+import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
+import com.pelot.mapper.salesman.query.SalesmanListPagePO;
+import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+
+import java.util.List;
 
 import javax.annotation.Resource;
-import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author hongcj
@@ -74,7 +83,7 @@ public class SalesmanManage {
     }
 
     /**
-     * 根据id获取销售人员信息
+     * 根据id获取销售人员信息（不包含所属上级名称）
      *
      * @param id
      * @return
@@ -262,5 +271,24 @@ public class SalesmanManage {
 
     public void delCustomerTrackInfoByCustomerInfoId(String customerInfoId) {
         salesmanMapper.delCustomerTrackInfoByCustomerInfoId(customerInfoId);
+    }
+
+    /**
+     * 信息统计
+     *
+     * @return
+     */
+    public List<StatisticsResult> statistics() {
+        return salesmanMapper.statistics();
+    }
+
+    /**
+     * 根据销售id获取销售信息（包含所属上级名称）
+     *
+     * @param id
+     * @return
+     */
+    public SalesmanInfo getSalesmanInfoWithLeadById(String id) {
+        return salesmanMapper.getSalesmanInfoWithLeadById(id);
     }
 }

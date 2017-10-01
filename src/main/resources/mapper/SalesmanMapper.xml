@@ -12,8 +12,8 @@
         <where>
             deleted = 0
             <if test="identity==1">
-                -- 销售组长，可以查看自己的信息和自己手下销售的信息
-                AND (id = #{salesmanId} OR belong = #{belong})
+                -- 销售组长，可以查看自己手下销售的信息
+                AND belong = #{belong}
             </if>
         </where>
         limit #{start}, #{pageSize}
@@ -26,7 +26,7 @@
             deleted = 0
             <if test="identity==1">
                 -- 销售组长，可以查看自己的信息和自己手下销售的信息
-                AND (id = #{salesmanId} OR belong = #{belong})
+                AND belong = #{belong}
             </if>
         </where>
     </select>
@@ -81,7 +81,7 @@
     </select>
 
     <select id="findAll" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
-        SELECT * from salesman_info  WHERE deleted = 0
+        SELECT * from salesman_info WHERE deleted = 0 and identity = 0
     </select>
 
     <select id="getCustomerInfoByPhone" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
@@ -191,48 +191,99 @@
     <select id="customerInfoList" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
             parameterType="com.pelot.mapper.salesman.query.CustomerListPagePO">
         SELECT
-            a.`id` as id,
-            a.`salesmanid` as salesmanId,
-            a.`receptiontime` as receptionTime,
-            a.`company` as company,
-            a.`name` as name,
-            a.`phone` as phone,
-            a.`sex` as sex,
-            a.`agerange` as ageRange,
-            a.`family_structure` as familyStructure,
-            a.`residential_region` as residentialRegion,
-            a.`residential_district` as residentialDistrict,
-            a.`workingarea` as workingArea,
-            a.`msgaccess` as msgAccess,
-            a.`company_type` as companyType,
-            a.`job` as job,
-            a.`preferred_product` as preferredProduct,
-            a.`preferred_area` as preferredArea,
-            a.`psychological_unit_price` as psychologicalUnitPrice,
-            a.`psychological_total_price` as psychologicalTotalPrice,
-            a.`reason` as reason,
-            a.`payway` as payWay,
-            a.`trip_tools` as tripTools,
-            a.`key_factor` as keyFactor,
-            a.`asking_time` as askingTime,
-            a.`loan_time` as loanTime,
-            a.`willingness` as willingness,
-            a.`desc` as 'desc',
-            c.salesmanName as salesmanName
-        from customer_info a
-        LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
-        ON a.salesmanId = c.salesmanId
-        WHERE a.deleted = 0 and a.salesmanId = #{salesmanId}
+        *
+        FROM
+        (
+        SELECT
+        a.`id` AS id,
+        a.`salesmanid` AS salesmanId,
+        c.salesmanName AS salesmanName,
+        c.salesmanLeaderName as salesmanLeaderName,
+        a.`receptiontime` AS receptionTime,
+        a.`company` AS company,
+        a.`name` AS NAME,
+        a.`phone` AS phone,
+        a.`sex` AS sex,
+        a.`agerange` AS ageRange,
+        a.`family_structure` AS familyStructure,
+        a.`residential_region` AS residentialRegion,
+        a.`residential_district` AS residentialDistrict,
+        a.`workingarea` AS workingArea,
+        a.`msgaccess` AS msgAccess,
+        a.`company_type` AS companyType,
+        a.`job` AS job,
+        a.`preferred_product` AS preferredProduct,
+        a.`preferred_area` AS preferredArea,
+        a.`psychological_unit_price` AS psychologicalUnitPrice,
+        a.`psychological_total_price` AS psychologicalTotalPrice,
+        a.`reason` AS reason,
+        a.`payway` AS payWay,
+        a.`trip_tools` AS tripTools,
+        a.`key_factor` AS keyFactor,
+        a.`asking_time` AS askingTime,
+        a.`loan_time` AS loanTime,
+        a.`willingness` AS willingness,
+        a.`desc` AS 'desc'
+        FROM
+        customer_info a
+        RIGHT JOIN (
+        SELECT
+        b.id,
+        b. NAME AS salesmanName,
+        b.salesmanLeaderName as salesmanLeaderName
+        FROM
+        (
+        SELECT
+        aa.*, dd. NAME AS salesmanLeaderName
+        FROM
+        salesman_info aa
+        LEFT JOIN (
+        SELECT
+        bb.*
+        FROM
+        salesman_info bb
+        ) AS dd ON aa.belong = dd.id
+        ) b
+        WHERE
+        b.deleted = 0
+        AND (
+        b.id = #{salesmanId}
+        OR b.belong = #{salesmanId}
+        )
+        ) AS c ON a.salesmanid = c.id
+        AND a.deleted = 0
+        <if test="name!=null and null!=''">
+            and a.name like ${name}
+        </if>
+        ) d
+        WHERE
+        d.id IS NOT NULL
         limit #{start}, #{pageSize}
     </select>
 
 
     <select id="customerInfoListCount" resultType="java.lang.Integer"
             parameterType="com.pelot.mapper.salesman.query.CustomerListPagePO">
-        SELECT count(*) from customer_info a
-          LEFT JOIN (SELECT id as salesmanId,name as salesmanName from salesman_info b where b.deleted = 0 and (b.id=#{salesmanId} OR b.belong = #{salesmanId})) as c
-          ON a.salesmanId = c.salesmanId
-        WHERE a.deleted = 0 and a.salesmanId = #{salesmanId}
+        SELECT COUNT(*) FROM (
+        SELECT a.id as id
+        FROM
+        customer_info a
+        RIGHT JOIN (
+        SELECT
+        b.id,
+        b. NAME AS salesmanName
+        FROM
+        salesman_info b
+        WHERE b.deleted = 0
+        <if test="identity!=2">
+            and (b.id = #{salesmanId}
+            OR b.belong = #{salesmanId})
+        </if>
+        ) AS c ON a.salesmanid = c.id and a.deleted = 0
+        <if test="name!=null and null!=''">
+            and a.name like ${name}
+        </if>) d
+        WHERE d.id is not null
     </select>
 
     <update id="editCustomerInfo" parameterType="com.pelot.form.salesman.CustomerInfoForm">
@@ -325,7 +376,7 @@
     </select>
 
 
-    <select id="statistics" parameterType="java.lang.String">
+    <select id="statistics" resultType="com.pelot.mapper.salesman.dataobject.StatisticsResult">
         SELECT
         g.id as salesmanLeaderId ,
         g. NAME as salesmanLeaderName,
@@ -394,4 +445,26 @@
         AND g.deleted = 0
     </select>
 
+    <select id="getSalesmanInfoWithLeadById" resultType="com.pelot.mapper.salesman.dataobject.SalesmanInfo" parameterType="java.lang.String">
+        SELECT a.* from (
+        <include refid="sql_getSalesmanInfoWithLead"></include>
+        ) AS a
+        WHERE a.deleted = 0 and a.id = #{salesmanId}
+    </select>
+
+
+    <!--获取销售人员信息，包含对应的上级-->
+    <sql id="sql_getSalesmanInfoWithLead">
+        SELECT
+            aa.*, dd.name as salesmanLeaderName
+        FROM
+            salesman_info aa
+        LEFT JOIN(
+            SELECT
+                bb.*
+            FROM
+                salesman_info bb
+            WHERE bb.deleted = 0
+        ) AS dd ON aa.belong = dd.id and  aa.deleted = 0
+    </sql>
 </mapper>

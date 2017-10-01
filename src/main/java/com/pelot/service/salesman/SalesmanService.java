@@ -16,18 +16,22 @@ import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
+import com.pelot.mapper.salesman.dataobject.StatisticsResult;
 import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.utils.StringCommonUtil;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Resource;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 销售人员登录
@@ -113,6 +117,10 @@ public class SalesmanService {
     }
 
     public PageQuery<CustomerInfo> listCustomerInfo(CustomerListPagePO po) {
+        if (!StringUtils.isEmpty(po.getName())) {
+            po.setName(StringCommonUtil.replaceBlank(po.getName()));
+            po.setName("'%" + po.getName() + "%'");
+        }
         return salesmanManage.list(po);
     }
 
@@ -205,5 +213,25 @@ public class SalesmanService {
         return salesmanManage.customerTrackInfoList(po);
     }
 
+    /**
+     * 信息统计
+     *
+     * @return
+     */
+    public List<StatisticsResult> statistics() {
+        try {
+            return salesmanManage.statistics();
+        } catch (Exception e) {
+            log.error("获取统计信息失败,excetpion={}", e);
+            throw new SalesmanException(ResultEnum.STATISTICS_FAIL);
+        }
+    }
 
+    public SalesmanInfo getSalesmanInfoWithLeadById(String id) {
+        SalesmanInfo result = salesmanManage.getSalesmanInfoWithLeadById(id);
+        if (Objects.isNull(result)) {
+            throw new SalesmanException(ResultEnum.SALESMANINFO_NOT_EXIST);
+        }
+        return result;
+    }
 }

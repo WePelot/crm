@@ -54,7 +54,9 @@ public enum ResultEnum {
 
     CUSTOMER_TRACK_INFO_ADD_FAIL(18, "新增客户追踪信息失败"),
 
-    CUSTOMER_TRACK_INFO_CHG_FAIL(19, "修改客户追踪信息失败"),;
+    CUSTOMER_TRACK_INFO_CHG_FAIL(19, "修改客户追踪信息失败"),
+
+    STATISTICS_FAIL(20, "获取统计信息失败");
 
 
     private Integer code;

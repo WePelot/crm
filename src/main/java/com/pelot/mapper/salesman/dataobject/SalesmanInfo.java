@@ -10,6 +10,7 @@ package com.pelot.mapper.salesman.dataobject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pelot.enums.SalesmanInfoIdentityEnum;
 import com.pelot.utils.EnumUtil;
+
 import lombok.Data;
 
 /**
@@ -53,6 +54,11 @@ public class SalesmanInfo {
      * 所属上级，总负责人上级为0
      */
     private String belong;
+
+    /**
+     * 销售对应的上级的姓名
+     */
+    private String salesmanLeaderName;
 
     /**
      * 是否被删除，0为未删除，1为已删除
