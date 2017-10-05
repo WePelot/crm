@@ -26,6 +26,6 @@ public class CrmAuthorizeExceptionHandle {
     //处理权限异常
     @ExceptionHandler(value = CrmAuthorizeException.class)
     public ModelAndView handleException() {
-        return new ModelAndView("/crm/html/salesman/login.html");
+        return new ModelAndView("/html/salesman/login.html");
     }
 }

@@ -15,7 +15,7 @@ create table `salesman_info` (
     primary key (`id`)
 ) comment '销售人员信息表';
 
-INSERT INTO `salesman_info` VALUES(uuid(),'hongcj','123456','洪陈金','15067189876',2,null,0, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP());
+INSERT INTO `salesman_info` VALUES(uuid(),'admin','crm889988','总监','15067189876',2,null,0, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP());
 
 -- 客户信息表
 create table `customer_info` (

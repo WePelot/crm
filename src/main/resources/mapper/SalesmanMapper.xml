@@ -54,8 +54,9 @@
     </update>
 
     <insert id="addSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
-        INSERT INTO `salesman_info`(`id`,`username`, `password`,`name`,`phone`,`identity` ,`belong`)
-        VALUES(uuid(),#{username},'abc123',#{name},#{phone},#{identity},#{belong})
+        INSERT INTO `salesman_info`(`id`,`username`, `password`,`name`,`phone`,`identity`
+        ,`belong`,`create_time`,`update_time`)
+        VALUES(uuid(),#{username},'abc123',#{name},#{phone},#{identity},#{belong},CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP())
     </insert>
 
     <update id="chgSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
@@ -160,7 +161,9 @@
             `asking_time`,
             `loan_time`,
             `willingness`,
-            `desc`)
+        `desc`,
+        `create_time`,
+        `update_time`)
         VALUES(
             uuid(),
             #{salesmanId},
@@ -188,7 +191,9 @@
             #{askingTime},
             #{loanTime},
             #{willingness},
-            #{desc})
+        #{desc},
+        CURRENT_TIMESTAMP(),
+        CURRENT_TIMESTAMP())
     </insert>
 
     <select id="customerInfoList" resultType="com.pelot.mapper.salesman.dataobject.CustomerInfo"
@@ -325,8 +330,8 @@
 
 
     <insert id="addCustomerTrackInfo" parameterType="com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm">
-        INSERT INTO `customer_track_info` (`id`,`customer_info_id` ,`desc`)
-        VALUES(uuid(),#{customerInfoId},#{desc})
+        INSERT INTO `customer_track_info` (`id`,`customer_info_id` ,`desc`,`create_time`,`update_time`)
+        VALUES(uuid(),#{customerInfoId},#{desc},CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP())
     </insert>
 
     <update id="delCustomerTrackInfo" parameterType="java.lang.String">

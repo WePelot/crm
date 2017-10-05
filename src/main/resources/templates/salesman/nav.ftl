@@ -6,7 +6,8 @@
             </a>
         </li>
         <li>
-            <a href="/crm/salesman/listCustomerInfo"><i class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
+            <a href="/crm/salesman/listCustomerInfo?pageNo=1&pageSize=20"><i
+                    class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
         </li>
 
     <#if identity == 0>
