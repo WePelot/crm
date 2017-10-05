@@ -9,7 +9,8 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" action="/salesman/saveCustomerTrackInfo" method="post">
+                    <form class="form-horizontal" role="form" action="/crm/salesman/saveCustomerTrackInfo"
+                          method="post">
                         <input type="hidden" name="customerInfoId" value="${customerInfo.id}">
 
                         <div class="form-group">

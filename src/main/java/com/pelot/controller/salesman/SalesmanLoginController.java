@@ -14,6 +14,16 @@ import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 import com.pelot.service.salesman.SalesmanLoginService;
 import com.pelot.service.salesman.SalesmanService;
 import com.pelot.utils.CookieUtil;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +31,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * 销售人员登录
@@ -68,13 +70,13 @@ public class SalesmanLoginController {
             //3. 将token写入cookie
             CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
             map.put("errorMsg", ResultEnum.LOGIN_SUCCESS.getMsg());
-            map.put("redirectUrl", "/salesman/listCustomerInfo?salesmanId=" + salesmanInfo.getId());
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo?salesmanId=" + salesmanInfo.getId());
             //3.设置成功后跳转增加客户信息列表的界面
             return new ModelAndView("common/success", map);
         } else {
             //用户名和密码不正确，转入错误页面
             map.put("errorMsg", ResultEnum.LOGIN_FAIL.getMsg());
-            map.put("redirectUrl", "/html/salesman/login.html");
+            map.put("redirectUrl", "/crm/html/salesman/login.html");
             return new ModelAndView("common/error", map);
         }
     }
@@ -89,7 +91,7 @@ public class SalesmanLoginController {
         }
         //3.清除成功后跳转成功界面
         map.put("errorMsg", ResultEnum.LOGOUT_SUCCESS.getMsg());
-        map.put("redirectUrl", "/html/salesman/login.html");
+        map.put("redirectUrl", "/crm/html/salesman/login.html");
         return new ModelAndView("common/success", map);
     }
 }

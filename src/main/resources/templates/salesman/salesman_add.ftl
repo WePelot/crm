@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" action="/salesman/add" method="post"
+                    <form class="form-horizontal" role="form" action="/crm/salesman/add" method="post"
                           onsubmit="return checkAddInfo();">
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">用户名</label>
@@ -122,7 +122,7 @@
 
                 //发送ajax请求
                 $.ajax({
-                    url: '/salesman/checkSalesmanInfoByQuery',
+                    url: '/crm/salesman/checkSalesmanInfoByQuery',
                     async: false,//同步，会阻塞操作
                     type: 'GET',//PUT DELETE POST
                     data: {"username": username, "phone": phone, "name": name},

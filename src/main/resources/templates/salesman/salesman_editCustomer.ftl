@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" action="/salesman/saveCustomerInfo" method="post"
+                    <form class="form-horizontal" role="form" action="/crm/salesman/saveCustomerInfo" method="post"
                           onsubmit="return checkCustomerForm();">
                         <input type="hidden" class="form-control" name="id" readonly="readonly"
                                value="${customerInfo.id!""}">
@@ -705,7 +705,7 @@
                     var phone = $("#phone").val();
                     //发送ajax请求
                     $.ajax({
-                        url: '/salesman/checkCustomerInfoByPhone',
+                        url: '/crm/salesman/checkCustomerInfoByPhone',
                         async: false,//同步，会阻塞操作
                         type: 'GET',//PUT DELETE POST
                         data: {"phone": phone},

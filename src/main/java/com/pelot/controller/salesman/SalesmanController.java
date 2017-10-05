@@ -112,11 +112,11 @@ public class SalesmanController extends BaseController {
             salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
             map.put("errorMsg", "添加成功");
-            map.put("redirectUrl", "/salesman/listSalesmanInfo?pageNo=1&pageSize=20");
+            map.put("redirectUrl", "/crm/salesman/listSalesmanInfo");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/salesman_list");
+            map.put("redirectUrl", "/crm/salesman/listSalesmanInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -157,7 +157,7 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -175,7 +175,7 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("salesman/salesman_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -187,12 +187,12 @@ public class SalesmanController extends BaseController {
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(id);
             salesmanService.delSalesmanById(salesmanInfo.getId());
             map.put("errorMsg", "删除成功");
-            map.put("redirectUrl", "/salesman/salesman_list");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             map.put("identity", getIdentity());
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -204,11 +204,11 @@ public class SalesmanController extends BaseController {
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(id);
             salesmanService.resetPwd(salesmanInfo.getId());
             map.put("errorMsg", "密码重置成功");
-            map.put("redirectUrl", "/salesman/listSalesmanInfo");
+            map.put("redirectUrl", "/crm/salesman/listSalesmanInfo");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -251,16 +251,16 @@ public class SalesmanController extends BaseController {
                     //2. 清除cookie里的token信息
                     CookieUtil.set(response, CookieConstant.TOKEN, null, 0);
                 }
-                map.put("redirectUrl", "/html/salesman/login.html");
+                map.put("redirectUrl", "/crm/html/salesman/login.html");
                 return new ModelAndView("common/success", map);
             } else {
                 map.put("errorMsg", "原密码输入不正确");
-                map.put("redirectUrl", "/salesman/toChgPwd");
+                map.put("redirectUrl", "/crm/salesman/toChgPwd");
                 return new ModelAndView("common/error", map);
             }
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/toChgPwd");
+            map.put("redirectUrl", "/crm/salesman/toChgPwd");
             return new ModelAndView("common/error", map);
         }
     }
@@ -303,7 +303,7 @@ public class SalesmanController extends BaseController {
             map.put("identity", getIdentity());
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
         return new ModelAndView("salesman/salesman_addCustomer", map);
@@ -325,7 +325,7 @@ public class SalesmanController extends BaseController {
             map.put("identity", getIdentity());
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
         return new ModelAndView("salesman/salesman_editCustomer", map);
@@ -350,7 +350,7 @@ public class SalesmanController extends BaseController {
                 CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
                 if (Objects.nonNull(customerInfoByPhone)) {
                     map.put("errorMsg", "该手机号码已经存在，请重新输入");
-                    map.put("redirectUrl", "/salesman/toAddCustomer");
+                    map.put("redirectUrl", "/crm/salesman/toAddCustomer");
                     return new ModelAndView("common/error", map);
                 }
                 //为空，说明为新增
@@ -367,18 +367,18 @@ public class SalesmanController extends BaseController {
                     CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
                     if (Objects.nonNull(customerInfoByPhone)) {
                         map.put("errorMsg", "该手机号码已经存在，请重新输入");
-                        map.put("redirectUrl", "/salesman/toEditCustomer");
+                        map.put("redirectUrl", "/crm/salesman/toEditCustomer");
                         return new ModelAndView("common/error", map);
                     }
                 }
                 salesmanService.editCustomerInfo(info);
                 map.put("errorMsg", "修改成功");
             }
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -439,11 +439,11 @@ public class SalesmanController extends BaseController {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
             salesmanService.delCustomerInfoById(customerInfo.getId());
             map.put("errorMsg", "删除成功");
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -467,7 +467,7 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("salesman/customer_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }
@@ -485,7 +485,7 @@ public class SalesmanController extends BaseController {
             map.put("identity", getIdentity());
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
         return new ModelAndView("salesman/customer_addTrackInfo", map);
@@ -510,7 +510,7 @@ public class SalesmanController extends BaseController {
             map.put("identity", getIdentity());
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
         return new ModelAndView("salesman/customer_track_list", map);
@@ -544,11 +544,11 @@ public class SalesmanController extends BaseController {
                 }
                 map.put("errorMsg", "修改成功");
             }
-            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
+            map.put("redirectUrl", "/crm/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
+            map.put("redirectUrl", "/crm/salesman/listCustomerTrackInfo?customerInfoId=" + info.getCustomerInfoId());
             return new ModelAndView("common/error", map);
         }
     }
@@ -567,11 +567,11 @@ public class SalesmanController extends BaseController {
             CustomerTrackInfo customerTrackInfoById = salesmanService.getCustomerTrackInfoById(customerTrackInfoId);
             salesmanService.delCustomerTrackInfo(customerTrackInfoById.getId());
             map.put("errorMsg", "删除成功");
-            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
+            map.put("redirectUrl", "/crm/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
             return new ModelAndView("common/success", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
+            map.put("redirectUrl", "/crm/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
             return new ModelAndView("common/error", map);
         }
     }
@@ -592,7 +592,7 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("salesman/customer_track_info_detail", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
+            map.put("redirectUrl", "/crm/salesman/listCustomerTrackInfo?customerInfoId=" + customerInfoId);
             return new ModelAndView("common/error", map);
         }
     }
@@ -612,7 +612,7 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("salesman/statistics", map);
         } catch (SalesmanException e) {
             map.put("errorMsg", e.getMessage());
-            map.put("redirectUrl", "/salesman/listCustomerInfo");
+            map.put("redirectUrl", "/crm/salesman/listCustomerInfo");
             return new ModelAndView("common/error", map);
         }
     }

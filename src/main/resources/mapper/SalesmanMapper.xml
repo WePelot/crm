@@ -35,7 +35,7 @@
 
     <update id="resetPwd"
             parameterType="com.pelot.mapper.salesman.query.SalesmanListPagePO">
-        UPDATE salesman_info SET password = 'abc123' WHERE id = #{salesmanId}
+        UPDATE salesman_info SET password = 'abc123',update_time=CURRENT_TIMESTAMP() WHERE id = #{salesmanId}
     </update>
 
 
@@ -46,11 +46,11 @@
 
     <update id="chgPwd"
             parameterType="com.pelot.mapper.salesman.query.ChgPwdDTO">
-        UPDATE salesman_info SET password = #{newPwd} WHERE id = #{salesmanId}
+        UPDATE salesman_info SET password = #{newPwd},update_time=CURRENT_TIMESTAMP() WHERE id = #{salesmanId}
     </update>
 
     <update id="delSalesmanById">
-        UPDATE salesman_info SET deleted = 1 WHERE id = #{salesmanId}
+        UPDATE salesman_info SET deleted = 1,,update_time=CURRENT_TIMESTAMP() WHERE id = #{salesmanId}
     </update>
 
     <insert id="addSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
@@ -59,7 +59,7 @@
     </insert>
 
     <update id="chgSalesmanInfo" parameterType="com.pelot.mapper.salesman.dataobject.SalesmanInfo">
-          UPDATE  `salesman_info`  SET  name = #{name}, phone = #{phone}
+        UPDATE `salesman_info` SET name = #{name}, phone = #{phone},update_time=CURRENT_TIMESTAMP()
           WHERE id = #{id}
     </update>
 
@@ -129,7 +129,7 @@
     </select>
 
     <update id="delCustomerInfoById">
-        UPDATE customer_info SET deleted = 1 WHERE id = #{id}
+        UPDATE customer_info SET deleted = 1,update_time=CURRENT_TIMESTAMP() WHERE id = #{id}
     </update>
 
     <insert id="addCustomerInfo" parameterType="com.pelot.form.salesman.CustomerInfoForm">
@@ -249,10 +249,12 @@
         ) b
         WHERE
         b.deleted = 0
-        AND (
-        b.id = #{salesmanId}
-        OR b.belong = #{salesmanId}
-        )
+        <if test="identity!=2">
+            AND (
+            b.id = #{salesmanId}
+            OR b.belong = #{salesmanId}
+            )
+        </if>
         ) AS c ON a.salesmanid = c.id
         AND a.deleted = 0
         <if test="name != null and name!=''">
@@ -316,7 +318,8 @@
             `asking_time` = #{askingTime},
             `loan_time` = #{loanTime},
             `willingness` = #{willingness},
-            `desc` = #{desc}
+        `desc` = #{desc},
+        update_time=CURRENT_TIMESTAMP()
         WHERE id = #{id}
     </update>
 
@@ -328,13 +331,13 @@
 
     <update id="delCustomerTrackInfo" parameterType="java.lang.String">
         UPDATE `customer_track_info`
-          SET deleted = 1
+        SET deleted = 1,update_time=CURRENT_TIMESTAMP()
         WHERE customer_info_id = #{customerTrackInfoId}
     </update>
 
     <update id="delCustomerTrackInfoByCustomerInfoId" parameterType="java.lang.String">
         UPDATE `customer_track_info`
-        SET deleted = 1
+        SET deleted = 1,update_time=CURRENT_TIMESTAMP()
         WHERE id = #{customerInfoId}
     </update>
 
@@ -352,7 +355,7 @@
 
     <update id="editCustomerTrackInfo" parameterType="com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm">
         UPDATE `customer_track_info`
-          SET `desc` = #{desc}
+        SET `desc` = #{desc},update_time=CURRENT_TIMESTAMP()
           WHERE id = #{customerTrackInfoId}
     </update>
 

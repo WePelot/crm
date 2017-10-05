@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" action="/salesman/chgMsg" method="post">
+                    <form class="form-horizontal" role="form" action="/crm/salesman/chgMsg" method="post">
                         <div class="form-group">
                             <label for="username" class="col-sm-2 control-label">用户名</label>
                             <div class="col-sm-6">

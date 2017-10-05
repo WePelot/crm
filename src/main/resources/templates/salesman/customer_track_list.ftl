@@ -11,7 +11,8 @@
             <div class="row clearfix">
             <#if identity==0>
                 <div class="col-md-12 column" style="margin-bottom: 15px;">
-                    <a class="btn btn-default" href="/salesman/toAddCustomerTrackInfo?customerInfoId=${customerInfoId}">客户追踪信息添加</a>
+                    <a class="btn btn-default"
+                       href="/crm/salesman/toAddCustomerTrackInfo?customerInfoId=${customerInfoId}">客户追踪信息添加</a>
                 </div>
             </#if>
                 <div class="col-md-12 column">
@@ -35,7 +36,7 @@
                                 <td>${dto.desc}</td>
                                 <#if identity==0>
                                     <td>
-                                        <a href="/salesman/delCustomerTrackInfo?customerTrackInfoId=${dto.id}&customerInfoId=${dto.customerInfoId}">删除</a>
+                                        <a href="/crm/salesman/delCustomerTrackInfo?customerTrackInfoId=${dto.id}&customerInfoId=${dto.customerInfoId}">删除</a>
                                     </td>
                                 </#if>
                             </tr>
@@ -50,7 +51,7 @@
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
                         <li>
-                            <a href="/salesman/listCustomerTrackInfo?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
+                            <a href="/crm/salesman/listCustomerTrackInfo?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
                         </li>
                     </#if>
                     <#list 1..list.getTotalPage() as index>
@@ -58,14 +59,15 @@
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
                             <li class=><a
-                                    href="/salesman/listCustomerTrackInfo?pageNo=${index}&pageSize=${size}">${index}</a>
+                                    href="/crm/salesman/listCustomerTrackInfo?pageNo=${index}&pageSize=${size}">${index}</a>
                             </li>
                         </#if>
                     </#list>
                     <#if currentPage gte list.getTotalPage()>
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
-                        <li><a href="/salesman/listCustomerTrackInfo?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a>
+                        <li>
+                            <a href="/crm/salesman/listCustomerTrackInfo?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a>
                         </li>
                     </#if>
                     </ul>

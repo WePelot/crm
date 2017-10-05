@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" action="/salesman/listCustomerInfo" method="get">
+                    <form class="form-horizontal" role="form" action="/crm/salesman/listCustomerInfo" method="get">
                         <div class="form-group">
                             <label for="name" class="col-sm-2 control-label" p>客户姓名</label>
                             <div class="col-sm-6">
@@ -60,18 +60,22 @@
                                 <td>${dto.salesmanName}</td>
                                 <td>${dto.salesmanLeaderName}</td>
                                 <#if identity==0>
-                                    <td><a href="/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
-                                    <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
-                                    <td><a href="/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
-                                    <td><a href="/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a></td>
-                                    <td><a href="/salesman/toAddCustomerTrackInfo?customerInfoId=${dto.id}">新增</a></td>
+                                    <td><a href="/crm/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
+                                    <td><a href="/crm/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
+                                    <td><a href="/crm/salesman/delCustomerInfo?id=${dto.id}">信息删除</a></td>
+                                    <td><a href="/crm/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a>
+                                    </td>
+                                    <td><a href="/crm/salesman/toAddCustomerTrackInfo?customerInfoId=${dto.id}">新增</a>
+                                    </td>
                                 <#elseif identity==1>
-                                    <td><a href="/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
-                                    <td><a href="/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
-                                    <td><a href="/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a></td>
+                                    <td><a href="/crm/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
+                                    <td><a href="/crm/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
+                                    <td><a href="/crm/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a>
+                                    </td>
                                 <#else >
-                                    <td><a href="/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
-                                    <td><a href="/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a></td>
+                                    <td><a href="/crm/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
+                                    <td><a href="/crm/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a>
+                                    </td>
                                 </#if>
 
                             </tr>
@@ -85,7 +89,8 @@
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
-                        <li><a href="/salesman/list?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
+                        <li>
+                            <a href="/crm/salesman/list?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
                         </li>
                     </#if>
                     <#list 1..list.getTotalPage() as index>
@@ -93,7 +98,7 @@
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
                             <li class=><a
-                                    href="/salesman/list?pageNo=${index}&pageSize=${size}&salesmanId=${salesmanId}">${index}</a>
+                                    href="/crm/salesman/list?pageNo=${index}&pageSize=${size}&salesmanId=${salesmanId}">${index}</a>
                             </li>
                         </#if>
                     </#list>
@@ -101,7 +106,7 @@
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
                         <li>
-                            <a href="/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}&salesmanId=${salesmanId}">下一页</a>
+                            <a href="/crm/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}&salesmanId=${salesmanId}">下一页</a>
                         </li>
                     </#if>
                     </ul>

@@ -88,7 +88,7 @@
 
 	<build>
 		<!-- 打出的jar包名称 -->
-		<finalName>ROOT</finalName>
+		<finalName>crm</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

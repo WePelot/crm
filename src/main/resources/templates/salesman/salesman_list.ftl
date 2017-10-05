@@ -34,10 +34,10 @@
                                 <td>${dto.name}</td>
                                 <td>${dto.phone}</td>
                                 <td>${dto.getSalesmanInfoIdentityEnum().msg}</td>
-                                <td><a href="/salesman/detail?id=${dto.id}">个人信息详情</a></td>
-                                <td><a href="/salesman/listCustomerInfo?salesmanId=${dto.id}">客户信息列表</a></td>
+                                <td><a href="/crm/salesman/detail?id=${dto.id}">个人信息详情</a></td>
+                                <td><a href="/crm/salesman/listCustomerInfo?salesmanId=${dto.id}">客户信息列表</a></td>
                                 <#if identity==1>
-                                <td><a href="/salesman/resetPwd?id=${dto.id}">密码重置</a></td>
+                                    <td><a href="/crm/salesman/resetPwd?id=${dto.id}">密码重置</a></td>
                                 </#if>
                             </tr>
                             </#list>
@@ -50,19 +50,19 @@
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
-                        <li><a href="/salesman/list?pageNo=${currentPage -1}&pageSize=${size}">上一页</a></li>
+                        <li><a href="/crm/salesman/list?pageNo=${currentPage -1}&pageSize=${size}">上一页</a></li>
                     </#if>
                     <#list 1..list.getTotalPage() as index>
                         <#if currentPage == index>
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
-                            <li class=><a href="/salesman/list?pageNo=${index}&pageSize=${size}">${index}</a></li>
+                            <li class=><a href="/crm/salesman/list?pageNo=${index}&pageSize=${size}">${index}</a></li>
                         </#if>
                     </#list>
                     <#if currentPage gte list.getTotalPage()>
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
-                        <li><a href="/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a></li>
+                        <li><a href="/crm/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}">下一页</a></li>
                     </#if>
                     </ul>
                 </div>

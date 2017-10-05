@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-md-12 column">
-                    <form class="form-horizontal" role="form" method="post" action="/salesman/chgPwd"
+                    <form class="form-horizontal" role="form" method="post" action="/crm/salesman/chgPwd"
                           onsubmit="return checkPwd()">
                         <div class=" form-group">
                             <label for="oldPassword" class="col-sm-2 control-label">原密码</label>
