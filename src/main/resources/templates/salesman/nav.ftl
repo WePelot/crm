@@ -6,7 +6,7 @@
             </a>
         </li>
         <li>
-            <a href="/crm/salesman/listCustomerInfo?pageNo=1&pageSize=20"><i
+            <a href="/crm/salesman/listCustomerInfo?pageNo=1&pageSize=20&time=new Date()"><i
                     class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
         </li>
 
