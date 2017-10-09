@@ -56,7 +56,9 @@ public enum ResultEnum {
 
     CUSTOMER_TRACK_INFO_CHG_FAIL(19, "修改客户追踪信息失败"),
 
-    STATISTICS_FAIL(20, "获取统计信息失败");
+    STATISTICS_FAIL(20, "获取统计信息失败"),
+
+    GET_MACADDR_FAIL(21, "获取客户端mac地址失败");
 
 
     private Integer code;

@@ -7,7 +7,6 @@
  */
 package com.pelot.mapper.salesman.dataobject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pelot.enums.SalesmanInfoIdentityEnum;
 import com.pelot.utils.EnumUtil;
 
@@ -66,11 +65,15 @@ public class SalesmanInfo {
     private Integer deleted;
 
     /**
+     * mac地址
+     */
+    private String macAddr;
+
+    /**
      * 获取销售身份
      *
      * @return
      */
-    @JsonIgnore
     public SalesmanInfoIdentityEnum getSalesmanInfoIdentityEnum() {
         return EnumUtil.getByCode(identity, SalesmanInfoIdentityEnum.class);
     }

@@ -9,6 +9,7 @@ create table `salesman_info` (
     `phone` varchar(32) UNIQUE not null,
     `identity` int(3) not null comment '身份，0为普通销售，1为销售组长，2为总负责人',
     `belong` varchar(64) comment '所属于上级ID',
+    `macaddr` VARCHAR(64) comment 'mac地址，总负责人时填写',
     `deleted` int(3) not null default 0  comment '是否删除，0为未删除，1为已删除',
     `create_time` timestamp not null default current_timestamp comment '创建时间',
     `update_time` timestamp not null default current_timestamp on update current_timestamp comment '修改时间',
