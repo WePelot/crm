@@ -73,21 +73,10 @@ public class SalesmanLoginController {
         if (Objects.nonNull(salesmanInfo)) {
             //如果是管理员的话，需要判断mac地址是否正确
             if (new Integer(2).equals(salesmanInfo.getIdentity())) {
-
                 //获取mac地址
                 try {
                     String macAddr = MacUtil.getMacAddr(request);
-                    if (!StringUtils.isEmpty(macAddr) && macAddr.equals(salesmanInfo.getMacAddr())) {
-                        //2.写入cookie（token为随机字符串+用户ID+用户身份+ 用户所属上级）
-                        String uuid = UUID.randomUUID().toString();
-                        String token =
-                            uuid + "_" + salesmanInfo.getId() + "_" + salesmanInfo.getIdentity() + "_" + salesmanInfo
-                                .getBelong();
-                        //3. 将token写入cookie
-                        CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
-                        map.put("errorMsg", ResultEnum.LOGIN_SUCCESS.getMsg());
-                        map.put("redirectUrl", "/crm/salesman/listCustomerInfo?salesmanId=" + salesmanInfo.getId());
-                    } else {
+                    if (StringUtils.isEmpty(macAddr) || macAddr.equals(salesmanInfo.getMacAddr())) {
                         //用户名和密码不正确，转入错误页面
                         map.put("errorMsg", "mac地址不匹配");
                         map.put("redirectUrl", "/crm/html/salesman/login.html");
@@ -105,6 +94,14 @@ public class SalesmanLoginController {
             map.put("redirectUrl", "/crm/html/salesman/login.html");
             return new ModelAndView("common/error", map);
         }
+        //2.写入cookie（token为随机字符串+用户ID+用户身份+ 用户所属上级）
+        String uuid = UUID.randomUUID().toString();
+        String token =
+            uuid + "_" + salesmanInfo.getId() + "_" + salesmanInfo.getIdentity() + "_" + salesmanInfo.getBelong();
+        //3. 将token写入cookie
+        CookieUtil.set(response, CookieConstant.TOKEN, token, CookieConstant.EXPIRE);
+        map.put("errorMsg", ResultEnum.LOGIN_SUCCESS.getMsg());
+        map.put("redirectUrl", "/crm/salesman/listCustomerInfo?salesmanId=" + salesmanInfo.getId());
         //3.设置成功后跳转增加客户信息列表的界面
         return new ModelAndView("common/success", map);
     }
