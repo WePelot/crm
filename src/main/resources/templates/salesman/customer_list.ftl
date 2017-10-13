@@ -39,7 +39,7 @@
                             <th colspan="2">客户信息</th>
                             <th colspan="1">客户追踪</th>
                         <#else >
-                            <th colspan="1">客户内容</th>
+                            <th colspan="2">客户内容</th>
                             <th colspan="1">客户追踪</th>
                         </#if>
 
@@ -74,6 +74,7 @@
                                     </td>
                                 <#else >
                                     <td><a href="/crm/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
+                                    <td><a href="/crm/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
                                     <td><a href="/crm/salesman/listCustomerTrackInfo?customerInfoId=${dto.id}">详情</a>
                                     </td>
                                 </#if>
@@ -86,6 +87,7 @@
                 </div>
                 <div class="col-md-12 column">
                     <ul class="pagination pull-right">
+                        <li class="disabled"><a href="#">客户总数：${list.totalCount}</a></li>
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >

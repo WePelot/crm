@@ -19,6 +19,7 @@ import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
+import com.pelot.utils.AESUtil;
 import com.pelot.utils.CookieUtil;
 import com.pelot.utils.ResultVOUtil;
 
@@ -69,6 +70,13 @@ public class SalesmanController extends BaseController {
         //总负责人的上级为null
         po.setBelong(getUserId());
         PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
+        if (Objects.nonNull(list.getData())) {
+            list.getData().forEach(q -> {
+                if (q.getPhone() != null) {
+                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
+                }
+            });
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("list",list);
         //在查询时会将page减1，所以这里需要加1
@@ -108,7 +116,7 @@ public class SalesmanController extends BaseController {
             salesmanInfo.setUsername(info.getUsername());
             salesmanInfo.setName(info.getName());
             salesmanInfo.setBelong(getUserId());
-            salesmanInfo.setPhone(info.getPhone());
+            salesmanInfo.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
             salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
             map.put("errorMsg", "添加成功");
@@ -275,6 +283,9 @@ public class SalesmanController extends BaseController {
     @GetMapping("/checkSalesmanInfoByQuery")
     @ResponseBody
     public ResultVO checkSalesmanInfoByQuery(@RequestParam String phone, @RequestParam String username, @RequestParam String name) {
+        if (!StringUtils.isEmpty(phone)) {
+            phone = AESUtil.getInstance().encrypt(phone);
+        }
         SalesmanInfo salesmanInfoByQuery = salesmanService.getSalesmanInfoByQuery(username, name, phone);
         if (Objects.isNull(salesmanInfoByQuery)) {
             return ResultVOUtil.success();
@@ -347,7 +358,8 @@ public class SalesmanController extends BaseController {
             }
             if (StringUtils.isEmpty(info.getId())) {
                 //判断手机号码是否存在
-                CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
+                CustomerInfo customerInfoByPhone = salesmanService
+                    .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 if (Objects.nonNull(customerInfoByPhone)) {
                     map.put("errorMsg", "该手机号码已经存在，请重新输入");
                     map.put("redirectUrl", "/crm/salesman/toAddCustomer");
@@ -361,10 +373,11 @@ public class SalesmanController extends BaseController {
                 //先判断对应的id是否存在
                 CustomerInfo customerInfoById = salesmanService.getCustomerInfoById(info.getId());
                 //判断手机是否有修改
-                if (!customerInfoById.getPhone().equals(info.getPhone())) {
+                if (!customerInfoById.getPhone().equals(AESUtil.getInstance().encrypt(info.getPhone()))) {
                     //手机号相同，则为同一个人，无需判断手机号是否存在
                     //判断手机号码是否存在
-                    CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(info.getPhone());
+                    CustomerInfo customerInfoByPhone = salesmanService
+                        .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                     if (Objects.nonNull(customerInfoByPhone)) {
                         map.put("errorMsg", "该手机号码已经存在，请重新输入");
                         map.put("redirectUrl", "/crm/salesman/toEditCustomer");
@@ -392,7 +405,7 @@ public class SalesmanController extends BaseController {
     @GetMapping("/checkCustomerInfoByPhone")
     @ResponseBody
     public ResultVO checkCustomerInfoByPhone(@RequestParam String phone) {
-        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(phone);
+        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(AESUtil.getInstance().encrypt(phone));
         if (Objects.isNull(customerInfoByPhone)) {
             return ResultVOUtil.success();
         } else {
@@ -416,6 +429,13 @@ public class SalesmanController extends BaseController {
         po.setSalesmanId(getUserId());
         po.setIdentity(getIdentity());
         PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);
+        if (Objects.nonNull(list.getData())) {
+            list.getData().forEach(q -> {
+                if (q.getPhone() != null) {
+                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
+                }
+            });
+        }
         map.put("list", list);
         //在查询时会将page减1，所以这里需要加1
         map.put("currentPage", po.getPageNo() + 1);
