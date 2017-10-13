@@ -21,7 +21,7 @@
                 <div class="col-md-12 column">
                     <form class="form-horizontal" role="form" action="/crm/salesman/saveCustomerInfo" method="post"
                           onsubmit="return checkCustomerForm();">
-                        <input type="hidden" class="form-control" name="id" readonly="readonly"
+                        <input type="hidden" class="form-control" name="id" readonly="readonly" id="customerInfoId"
                                value="${customerInfo.id!""}">
                         <div class="form-group">
                             <label for="receptionTime" class="col-sm-2 control-label">接待销售</label>
@@ -59,6 +59,11 @@
                             <div class="col-sm-6 column">
                                 <input type="text" class="form-control" id="phone" name="phone"
                                        value="${customerInfo.phone!""}"/>
+                            </div>
+                            <div class="col-sm-2 column">
+                                <button id="checkPhone" name="checkPhone" class="btn btn-primary" type="button">
+                                    校验!
+                                </button>
                             </div>
                         </div>
 
@@ -708,7 +713,7 @@
                         url: '/crm/salesman/checkCustomerInfoByPhone',
                         async: false,//同步，会阻塞操作
                         type: 'GET',//PUT DELETE POST
-                        data: {"phone": phone},
+                        data: {"phone": phone, "customerInfoId": ""},
                         success: function (result) {
                             if (result.code == 0) {
                                 checkResult = true;
@@ -724,6 +729,36 @@
 
             return checkResult;
         }
+
+        function checkPhone() {
+            //获取手机号码
+            var phone = $("#phone").val();
+            var customerInfoId = $("#customerInfoId").val();
+            var phoneReg = /^1(3|4|5|7|8)\d{9}$/;
+            if (phoneReg.test(phone)) {
+                //发送ajax请求
+                $.ajax({
+                    url: '/crm/salesman/checkCustomerInfoByPhone',
+                    async: false,//同步，会阻塞操作
+                    type: 'GET',//PUT DELETE POST
+                    data: {"phone": phone, "customerInfoId": customerInfoId},
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert("该号码可以使用");
+                        } else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            } else {
+                alert("不符合手机号码格式");
+            }
+
+        }
+
+        $("#checkPhone").click(function () {
+            checkPhone();
+        })
     </script>
 </body>
 </html>

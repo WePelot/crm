@@ -1,3 +1,11 @@
+<script>
+    //给url增加时间戳，防止页面304浏览器缓存
+    function setUrlWithTime(url) {
+        url += "&time=" + new Date().getTime();
+        window.location.href = url;
+    }
+</script>
+
 <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
     <ul class="nav sidebar-nav">
         <li class="sidebar-brand">
@@ -6,7 +14,7 @@
             </a>
         </li>
         <li>
-            <a href="/crm/salesman/listCustomerInfo?pageNo=1&pageSize=20&time=new Date()"><i
+            <a href="#" onclick="setUrlWithTime('/crm/salesman/listCustomerInfo?pageNo=1&pageSize=20')"><i
                     class=" fa fa-fw fa-list-alt"></i>客户信息列表</a>
         </li>
 

@@ -55,7 +55,11 @@
                             <label for="phone" class="col-sm-2 control-label">客户电话</label>
                             <div class="col-sm-6 column">
                                 <input type="text" class="form-control" id="phone" name="phone"/>
-                                <input type="button" class="form-control" id="checkPhone" name="checkPhone"/>
+                            </div>
+                            <div class="col-sm-2 column">
+                                <button id="checkPhone" name="checkPhone" class="btn btn-primary" type="button">
+                                    校验!
+                                </button>
                             </div>
                         </div>
 
@@ -683,7 +687,7 @@
                     url: '/crm/salesman/checkCustomerInfoByPhone',
                     async: false,//同步，会阻塞操作
                     type: 'GET',//PUT DELETE POST
-                    data: {"phone": phone},
+                    data: {"phone": phone, "customerInfoId": ""},
                     success: function (result) {
                         if (result.code == 0) {
                             checkResult = true;
@@ -698,24 +702,28 @@
 
 
         function checkPhone() {
-            var checkResult = false;
             //获取手机号码
             var phone = $("#phone").val();
-            //发送ajax请求
-            $.ajax({
-                url: '/crm/salesman/checkCustomerInfoByPhone',
-                async: false,//同步，会阻塞操作
-                type: 'GET',//PUT DELETE POST
-                data: {"phone": phone},
-                success: function (result) {
-                    if (result.code == 0) {
-                        checkResult = true;
-                    } else {
-                        alert(result.msg);
+            var phoneReg = /^1(3|4|5|7|8)\d{9}$/;
+            if (phoneReg.test(phone)) {
+                //发送ajax请求
+                $.ajax({
+                    url: '/crm/salesman/checkCustomerInfoByPhone',
+                    async: false,//同步，会阻塞操作
+                    type: 'GET',//PUT DELETE POST
+                    data: {"phone": phone, "customerInfoId": ""},
+                    success: function (result) {
+                        if (result.code == 0) {
+                            alert("该号码可以使用");
+                        } else {
+                            alert(result.msg);
+                        }
                     }
-                }
-            });
-            return checkResult;
+                });
+            } else {
+                alert("不符合手机号码格式");
+            }
+
         }
 
         $("#checkPhone").click(function () {

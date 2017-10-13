@@ -47,6 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 销售人员的操作控制
+ *
  * @author hongcj
  * @version V1.0
  * @since 2017-09-19 18:59
@@ -61,6 +62,7 @@ public class SalesmanController extends BaseController {
     /**
      * 获取销售人员列表集合
      * 前端传过来的po里只有pageNo和pageSize
+     *
      * @return
      */
     @GetMapping("/listSalesmanInfo")
@@ -70,15 +72,15 @@ public class SalesmanController extends BaseController {
         //总负责人的上级为null
         po.setBelong(getUserId());
         PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
-        if (Objects.nonNull(list.getData())) {
-            list.getData().forEach(q -> {
-                if (q.getPhone() != null) {
-                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
-                }
-            });
-        }
+        //        if (Objects.nonNull(list.getData())) {
+        //            list.getData().forEach(q -> {
+        //                if (q.getPhone() != null) {
+        //                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
+        //                }
+        //            });
+        //        }
         Map<String, Object> map = new HashMap<>();
-        map.put("list",list);
+        map.put("list", list);
         //在查询时会将page减1，所以这里需要加1
         map.put("currentPage", po.getPageNo() + 1);
         map.put("size", po.getPageSize());
@@ -116,7 +118,8 @@ public class SalesmanController extends BaseController {
             salesmanInfo.setUsername(info.getUsername());
             salesmanInfo.setName(info.getName());
             salesmanInfo.setBelong(getUserId());
-            salesmanInfo.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+            //            salesmanInfo.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+            salesmanInfo.setPhone(info.getPhone());
             salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
             map.put("errorMsg", "添加成功");
@@ -128,7 +131,6 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("common/error", map);
         }
     }
-
 
     /**
      * 跳转修改个人信息的页面
@@ -188,7 +190,6 @@ public class SalesmanController extends BaseController {
         }
     }
 
-
     @GetMapping("/delSalesman")
     public ModelAndView delSalesman(@RequestParam String id, Map<String, Object> map) {
         try {
@@ -205,7 +206,6 @@ public class SalesmanController extends BaseController {
         }
     }
 
-
     @GetMapping("/resetPwd")
     public ModelAndView resetPwd(@RequestParam String id, Map<String, Object> map) {
         try {
@@ -220,7 +220,6 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("common/error", map);
         }
     }
-
 
     /**
      * 跳转修改个人密码的页面
@@ -241,8 +240,8 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @PostMapping("/chgPwd")
-    public ModelAndView chgPwd(@Valid ChgPwdForm form, BindingResult bindingResult,
-                               HttpServletResponse response, Map<String, Object> map) {
+    public ModelAndView chgPwd(@Valid ChgPwdForm form, BindingResult bindingResult, HttpServletResponse response,
+        Map<String, Object> map) {
         try {
             if (bindingResult.hasErrors()) {
                 log.error("修改密码参数错误,错误信息={}", bindingResult.getFieldError().getDefaultMessage());
@@ -282,10 +281,11 @@ public class SalesmanController extends BaseController {
      */
     @GetMapping("/checkSalesmanInfoByQuery")
     @ResponseBody
-    public ResultVO checkSalesmanInfoByQuery(@RequestParam String phone, @RequestParam String username, @RequestParam String name) {
-        if (!StringUtils.isEmpty(phone)) {
-            phone = AESUtil.getInstance().encrypt(phone);
-        }
+    public ResultVO checkSalesmanInfoByQuery(@RequestParam String phone, @RequestParam String username,
+        @RequestParam String name) {
+        //        if (!StringUtils.isEmpty(phone)) {
+        //            phone = AESUtil.getInstance().encrypt(phone);
+        //        }
         SalesmanInfo salesmanInfoByQuery = salesmanService.getSalesmanInfoByQuery(username, name, phone);
         if (Objects.isNull(salesmanInfoByQuery)) {
             return ResultVOUtil.success();
@@ -298,7 +298,6 @@ public class SalesmanController extends BaseController {
         }
         return ResultVOUtil.success();
     }
-
 
     /**
      * 跳转新增新客户信息界面
@@ -326,9 +325,11 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @GetMapping("/toEditCustomer")
-    public ModelAndView toEditCustomer(@RequestParam(value = "id", required = false) String id, Map<String, Object> map) {
+    public ModelAndView toEditCustomer(@RequestParam(value = "id", required = false) String id,
+        Map<String, Object> map) {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
+            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
             map.put("customerInfo", customerInfo);
             map.put("currentId", customerInfo.getSalesmanId());
             List<SalesmanInfo> list = salesmanService.findAll();
@@ -351,7 +352,8 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @PostMapping("/saveCustomerInfo")
-    public ModelAndView saveCustomerInfo(@Valid CustomerInfoForm info, BindingResult bindingResult, Map<String, Object> map) {
+    public ModelAndView saveCustomerInfo(@Valid CustomerInfoForm info, BindingResult bindingResult,
+        Map<String, Object> map) {
         try {
             if (bindingResult.hasErrors()) {
                 throw new SalesmanException(ResultEnum.PARAM_ERROR);
@@ -366,6 +368,7 @@ public class SalesmanController extends BaseController {
                     return new ModelAndView("common/error", map);
                 }
                 //为空，说明为新增
+                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 salesmanService.addCustomerInfo(info);
                 map.put("errorMsg", "添加成功");
             } else {
@@ -384,6 +387,7 @@ public class SalesmanController extends BaseController {
                         return new ModelAndView("common/error", map);
                     }
                 }
+                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 salesmanService.editCustomerInfo(info);
                 map.put("errorMsg", "修改成功");
             }
@@ -404,16 +408,22 @@ public class SalesmanController extends BaseController {
      */
     @GetMapping("/checkCustomerInfoByPhone")
     @ResponseBody
-    public ResultVO checkCustomerInfoByPhone(@RequestParam String phone) {
+    public ResultVO checkCustomerInfoByPhone(@RequestParam String phone, @RequestParam String customerInfoId) {
         CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(AESUtil.getInstance().encrypt(phone));
+
         if (Objects.isNull(customerInfoByPhone)) {
             return ResultVOUtil.success();
         } else {
+            if (!StringUtils.isEmpty(customerInfoId)) {
+                if (customerInfoId.equals(customerInfoByPhone.getId())) {
+                    //说明该号码就是这个用户所拥有
+                    return ResultVOUtil.success();
+                }
+            }
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoById(customerInfoByPhone.getSalesmanId());
-            return ResultVOUtil.error(-1, "该手机号码对应的客户已被销售: " + salesmanInfo.getName() + "添加");
+            return ResultVOUtil.error(-1, "该手机号码对应的客户已被销售: " + salesmanInfo.getName() + "  添加");
         }
     }
-
 
     /**
      * 获取客户信息集合
@@ -445,7 +455,6 @@ public class SalesmanController extends BaseController {
         return new ModelAndView("salesman/customer_list", map);
     }
 
-
     /**
      * 删除客户信息
      *
@@ -476,9 +485,11 @@ public class SalesmanController extends BaseController {
      * @return
      */
     @GetMapping("/customerInfoDetail")
-    public ModelAndView customerInfoDetail(@RequestParam(value = "id", required = false) String id, Map<String, Object> map) {
+    public ModelAndView customerInfoDetail(@RequestParam(value = "id", required = false) String id,
+        Map<String, Object> map) {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
+            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoWithLeadById(customerInfo.getSalesmanId());
             map.put("customerInfo", customerInfo);
             map.put("salesmanName", salesmanInfo.getName());
@@ -636,7 +647,5 @@ public class SalesmanController extends BaseController {
             return new ModelAndView("common/error", map);
         }
     }
-
-
 
 }
