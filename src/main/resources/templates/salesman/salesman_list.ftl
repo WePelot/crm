@@ -47,6 +47,7 @@
                 </div>
                 <div class="col-md-12 column">
                     <ul class="pagination pull-right">
+                        <li class="disabled"><a href="#">销售总数：${list.totalCount}</a></li>
                     <#if currentPage lte 1>
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
