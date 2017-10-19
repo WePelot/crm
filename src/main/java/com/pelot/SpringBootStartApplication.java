@@ -19,6 +19,9 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 
 /**
  * 修改启动类，继承 SpringBootServletInitializer 并重写 configure 方法
+ * @author hongcj
+ * @version V1.0
+ * @since 2017-07-19 14:24
  */
 public class SpringBootStartApplication extends SpringBootServletInitializer {
 

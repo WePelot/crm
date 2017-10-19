@@ -5,8 +5,10 @@ import com.pelot.mapper.common.PagePO;
 import lombok.Data;
 
 /**
- * Created by hongcj
- * 2017/9/23 15:13.
+ * 客户信息
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/23 15:13.
  */
 @Data
 public class CustomerListPagePO extends PagePO {

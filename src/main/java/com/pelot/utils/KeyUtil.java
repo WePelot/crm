@@ -17,7 +17,9 @@ import java.util.Random;
  */
 public class KeyUtil {
 
-    //防止多线程时出现相同的数字
+    /**
+     * 防止多线程时出现相同的数字
+     */
     public synchronized static  String genUniqueKey(){
         Random random = new Random();
         Integer number = random.nextInt(900000) + 100000;

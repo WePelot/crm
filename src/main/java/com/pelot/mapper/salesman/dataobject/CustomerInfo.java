@@ -4,8 +4,9 @@ import lombok.Data;
 
 /**
  * 客户信息
- * Created by hongcj
- * 2017/9/26 23:53.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017-07-19 14:24
  */
 @Data
 public class CustomerInfo {

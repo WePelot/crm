@@ -2,18 +2,21 @@ package com.pelot.controller.base;
 
 import com.pelot.constant.CookieConstant;
 import com.pelot.utils.CookieUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
- * 基础的控制类
- * Created by hongcj
- * 2017/9/24 14:13.
+ *基础的控制类
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/24 14:13.
  */
 @Controller
 @Slf4j

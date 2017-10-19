@@ -3,8 +3,9 @@ package com.pelot.mapper.salesman.query;
 import lombok.Data;
 
 /**
- * Created by hongcj
- * 2017/9/24 21:03.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/24 21:03.
  */
 @Data
 public class ChgPwdDTO {

@@ -4,8 +4,9 @@ import lombok.Data;
 
 /**
  * 客户信息跟踪
- * Created by hongcj
- * 2017/9/27 0:15.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/27 0:15.
  */
 @Data
 public class CustomerTrackInfo {

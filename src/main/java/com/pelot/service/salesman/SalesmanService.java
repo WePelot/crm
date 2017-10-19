@@ -27,8 +27,12 @@ import java.util.Objects;
 
 import javax.annotation.Resource;
 
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +49,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SalesmanService {
     @Resource
     private SalesmanManage salesmanManage;
+
+    @Resource
+    private DataSourceTransactionManager transactionManager;
 
     public PageQuery<SalesmanInfo> listSalesmanInfo(SalesmanListPagePO po) {
         return salesmanManage.list(po);
@@ -118,7 +125,6 @@ public class SalesmanService {
 
     public PageQuery<CustomerInfo> listCustomerInfo(CustomerListPagePO po) {
         if (!StringUtils.isEmpty(po.getName())) {
-            //            po.setName(StringCommonUtil.replaceBlank(po.getName()));
             po.setName("'%" + po.getName() + "%'");
         }
         return salesmanManage.list(po);
@@ -134,12 +140,19 @@ public class SalesmanService {
 
     @Transactional
     public void delCustomerInfoById(String id) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        // explicitly setting the transaction name is something that can only be done programmatically
+        def.setName("delCustomerInfoById");
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+
         try {
             salesmanManage.delCustomerInfoById(id);
             //删除客户追踪信息
             salesmanManage.delCustomerTrackInfoByCustomerInfoId(id);
         } catch (Exception e) {
             log.error("删除客户信息失败,id={},excetpion={}", id, e);
+            transactionManager.rollback(status);
             throw new SalesmanException(ResultEnum.CUSTOMERINFO_DEL_FAIL);
         }
     }

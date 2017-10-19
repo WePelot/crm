@@ -72,13 +72,6 @@ public class SalesmanController extends BaseController {
         //总负责人的上级为null
         po.setBelong(getUserId());
         PageQuery<SalesmanInfo> list = salesmanService.listSalesmanInfo(po);
-        //        if (Objects.nonNull(list.getData())) {
-        //            list.getData().forEach(q -> {
-        //                if (q.getPhone() != null) {
-        //                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
-        //                }
-        //            });
-        //        }
         Map<String, Object> map = new HashMap<>();
         map.put("list", list);
         //在查询时会将page减1，所以这里需要加1
@@ -118,7 +111,6 @@ public class SalesmanController extends BaseController {
             salesmanInfo.setUsername(info.getUsername());
             salesmanInfo.setName(info.getName());
             salesmanInfo.setBelong(getUserId());
-            //            salesmanInfo.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
             salesmanInfo.setPhone(info.getPhone());
             salesmanInfo.setIdentity(Integer.parseInt(info.getIdentity()));
             salesmanService.add(salesmanInfo);
@@ -283,9 +275,6 @@ public class SalesmanController extends BaseController {
     @ResponseBody
     public ResultVO checkSalesmanInfoByQuery(@RequestParam String phone, @RequestParam String username,
         @RequestParam String name) {
-        //        if (!StringUtils.isEmpty(phone)) {
-        //            phone = AESUtil.getInstance().encrypt(phone);
-        //        }
         SalesmanInfo salesmanInfoByQuery = salesmanService.getSalesmanInfoByQuery(username, name, phone);
         if (Objects.isNull(salesmanInfoByQuery)) {
             return ResultVOUtil.success();
@@ -435,7 +424,6 @@ public class SalesmanController extends BaseController {
     public ModelAndView listCustomerInfo(CustomerListPagePO po) {
         Map<String, Object> map = new HashMap<>();
         map.put("identity", getIdentity());
-        //        map.put("name", po.getName());
         po.setSalesmanId(getUserId());
         po.setIdentity(getIdentity());
         PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);

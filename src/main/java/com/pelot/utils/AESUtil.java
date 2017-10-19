@@ -38,8 +38,9 @@ public class AESUtil {
     }
 
     public static AESUtil getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new AESUtil();
+        }
         return instance;
     }
 
@@ -59,7 +60,8 @@ public class AESUtil {
             cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             byte[] raw = sKey.getBytes();
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-            IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());// 使用CBC模式，需要一个向量iv，可增加加密算法的强度
+            // 使用CBC模式，需要一个向量iv，可增加加密算法的强度
+            IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
             byte[] encrypted = cipher.doFinal(sSrc.getBytes("utf-8"));
             result = new BASE64Encoder().encode(encrypted);
@@ -87,7 +89,8 @@ public class AESUtil {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            byte[] encrypted1 = new BASE64Decoder().decodeBuffer(sSrc);// 先用base64解密
+            // 先用base64解密
+            byte[] encrypted1 = new BASE64Decoder().decodeBuffer(sSrc);
             byte[] original = cipher.doFinal(encrypted1);
             String originalString = new String(original, "utf-8");
             return originalString;
@@ -110,8 +113,8 @@ public class AESUtil {
         System.out.println("加密耗时：" + lUseTime + "毫秒");
         // 解密
         lStart = System.currentTimeMillis();
-        String DeString = AESUtil.getInstance().decrypt(enString);
-        System.out.println("解密后的字串是：" + DeString);
+        String deString = AESUtil.getInstance().decrypt(enString);
+        System.out.println("解密后的字串是：" + deString);
         lUseTime = System.currentTimeMillis() - lStart;
         System.out.println("解密耗时：" + lUseTime + "毫秒");
     }

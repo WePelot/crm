@@ -22,7 +22,8 @@ public class PageResolve {
         PageQuery<T> query = new PageQuery<>();
         query.setPageNo(r.getPageNo());
         query.setPageSize(r.getPageSize());
-        r.setPageNo(r.getPageNo() - 1); // 上层第一页默认是1，所以需要-1
+        // 上层第一页默认是1，所以需要-1
+        r.setPageNo(r.getPageNo() - 1);
         Integer count = c.apply(r);
         query.setTotalCount(count);
         if (count > 0) {

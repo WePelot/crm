@@ -1,13 +1,15 @@
 package com.pelot.form.salesman;
 
-import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+import lombok.Data;
+
 /**
- * Created by hongcj
- * 2017/9/26 23:48.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017-07-19 14:24
  */
 @Data
 public class CustomerInfoForm {

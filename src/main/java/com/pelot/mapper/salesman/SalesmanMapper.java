@@ -41,7 +41,7 @@ public interface SalesmanMapper {
 
     /**
      * 销售人员列表
-     *
+     * @param po
      * @return
      */
     List<SalesmanInfo> salesmanInfolist(PagePO po);
@@ -142,12 +142,13 @@ public interface SalesmanMapper {
      * 添加客户信息
      *
      * @param info
+     * @return
      */
     void addCustomerInfo(CustomerInfoForm info);
 
     /**
      * 客户信息列表
-     *
+     * @param po
      * @return
      */
     List<CustomerInfo> customerInfoList(PagePO po);
@@ -241,5 +242,11 @@ public interface SalesmanMapper {
      */
     List<StatisticsResult> statistics();
 
+    /**
+     * 获取销售人员（包含销售组长信息）
+     *
+     * @param salesmanId
+     * @return
+     */
     SalesmanInfo getSalesmanInfoWithLeadById(String salesmanId);
 }

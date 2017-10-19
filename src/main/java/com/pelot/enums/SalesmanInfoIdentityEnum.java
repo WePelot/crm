@@ -3,8 +3,9 @@ package com.pelot.enums;
 import lombok.Getter;
 
 /**
- * Created by hongcj
- * 2017/9/24 14:03.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/24 14:03.
  */
 @Getter
 public enum SalesmanInfoIdentityEnum implements CodeEnum {

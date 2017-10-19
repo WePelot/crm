@@ -1,11 +1,13 @@
 package com.pelot.mapper.salesman.query;
 
 import com.pelot.mapper.common.PagePO;
+
 import lombok.Data;
 
 /**
- * Created by hongcj
- * 2017/9/23 15:13.
+ * @author hongcj
+ * @version V1.0
+ * @since 2017/9/23 15:13.
  */
 @Data
 public class SalesmanListPagePO extends PagePO {

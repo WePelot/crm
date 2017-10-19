@@ -19,14 +19,21 @@ public class PagePO {
      */
     private int pageSize = 20;
 
+    /**
+     * 定义的默认最大值
+     *
+     * @param pageNo
+     */
+    private int maxPageSize = 100;
+
 
     public void setPageNo(int pageNo) {
         this.pageNo = pageNo;
     }
 
     public void setPageSize(int pageSize) {
-        if (pageSize > 100) {
-            pageSize = 100;
+        if (pageSize > maxPageSize) {
+            pageSize = maxPageSize;
         }
         this.pageSize = pageSize;
     }

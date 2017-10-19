@@ -42,37 +42,37 @@ public class UdpGetClientMacAddr {
         return dp;
     }
 
-    protected byte[] GetQueryCmd() throws Exception {
-        byte[] t_ns = new byte[50];
-        t_ns[0] = 0x00;
-        t_ns[1] = 0x00;
-        t_ns[2] = 0x00;
-        t_ns[3] = 0x10;
-        t_ns[4] = 0x00;
-        t_ns[5] = 0x01;
-        t_ns[6] = 0x00;
-        t_ns[7] = 0x00;
-        t_ns[8] = 0x00;
-        t_ns[9] = 0x00;
-        t_ns[10] = 0x00;
-        t_ns[11] = 0x00;
-        t_ns[12] = 0x20;
-        t_ns[13] = 0x43;
-        t_ns[14] = 0x4B;
+    protected byte[] getQueryCmd() throws Exception {
+        byte[] tns = new byte[50];
+        tns[0] = 0x00;
+        tns[1] = 0x00;
+        tns[2] = 0x00;
+        tns[3] = 0x10;
+        tns[4] = 0x00;
+        tns[5] = 0x01;
+        tns[6] = 0x00;
+        tns[7] = 0x00;
+        tns[8] = 0x00;
+        tns[9] = 0x00;
+        tns[10] = 0x00;
+        tns[11] = 0x00;
+        tns[12] = 0x20;
+        tns[13] = 0x43;
+        tns[14] = 0x4B;
 
         for (int i = 15; i < 45; i++) {
-            t_ns[i] = 0x41;
+            tns[i] = 0x41;
         }
 
-        t_ns[45] = 0x00;
-        t_ns[46] = 0x00;
-        t_ns[47] = 0x21;
-        t_ns[48] = 0x00;
-        t_ns[49] = 0x01;
-        return t_ns;
+        tns[45] = 0x00;
+        tns[46] = 0x00;
+        tns[47] = 0x21;
+        tns[48] = 0x00;
+        tns[49] = 0x01;
+        return tns;
     }
 
-    protected final String GetMacAddr(byte[] brevdata) throws Exception {
+    protected final String getMacAddr(byte[] brevdata) throws Exception {
 
         int i = brevdata[56] * 18 + 56;
         String sAddr = "";
@@ -84,8 +84,9 @@ public class UdpGetClientMacAddr {
                 sb.append(0);
             }
             sb.append(sAddr.toUpperCase());
-            if (j < 6)
+            if (j < 6) {
                 sb.append(':');
+            }
         }
         return sb.toString();
     }
@@ -98,11 +99,11 @@ public class UdpGetClientMacAddr {
         }
     }
 
-    public final String GetRemoteMacAddr() throws Exception {
-        byte[] bqcmd = GetQueryCmd();
+    public final String getRemoteMacAddr() throws Exception {
+        byte[] bqcmd = getQueryCmd();
         send(bqcmd);
         DatagramPacket dp = receive();
-        String smac = GetMacAddr(dp.getData());
+        String smac = getMacAddr(dp.getData());
         close();
 
         return smac;

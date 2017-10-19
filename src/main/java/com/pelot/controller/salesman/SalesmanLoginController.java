@@ -9,6 +9,7 @@ package com.pelot.controller.salesman;
 
 import com.pelot.constant.CookieConstant;
 import com.pelot.enums.ResultEnum;
+import com.pelot.enums.SalesmanInfoIdentityEnum;
 import com.pelot.exception.SalesmanException;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
@@ -72,11 +73,11 @@ public class SalesmanLoginController {
         SalesmanInfo salesmanInfo = salesmanLoginService.login(new SalesmanLoginPO(username, password));
         if (Objects.nonNull(salesmanInfo)) {
             //如果是管理员的话，需要判断mac地址是否正确
-            if (new Integer(2).equals(salesmanInfo.getIdentity())) {
+            if (SalesmanInfoIdentityEnum.HEAD_CHARGE.getCode().equals(salesmanInfo.getIdentity())) {
                 //获取mac地址
                 try {
                     String macAddr = MacUtil.getMacAddr(request);
-                    if (StringUtils.isEmpty(macAddr) || macAddr.equals(salesmanInfo.getMacAddr())) {
+                    if (StringUtils.isEmpty(macAddr) || !macAddr.equals(salesmanInfo.getMacAddr())) {
                         //用户名和密码不正确，转入错误页面
                         map.put("errorMsg", "mac地址不匹配");
                         map.put("redirectUrl", "/crm/html/salesman/login.html");
