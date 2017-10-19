@@ -61,7 +61,7 @@
             var flag = false;
             //发送ajax请求
             $.ajax({
-              url: '/crm/verifyCode/checkVerifyCode',
+              url: '/crm/verifyCode/checkVerifyCode?time=' + new Date().getTime(),
               async: false,//同步，会阻塞操作
               type: 'POST',//PUT DELETE POST
               data: {"verCode": verCode},
