@@ -232,7 +232,9 @@
         a.`asking_time` AS askingTime,
         a.`loan_time` AS loanTime,
         a.`willingness` AS willingness,
-        a.`desc` AS 'desc'
+        a.`desc` AS 'desc',
+        a.`create_time` AS createTime,
+        a.`update_time` AS updateTime
         FROM
         customer_info a
         RIGHT JOIN (
@@ -269,6 +271,7 @@
         ) d
         WHERE
         d.id IS NOT NULL
+        ORDER BY d.createTime DESC
         limit #{start}, #{pageSize}
     </select>
 

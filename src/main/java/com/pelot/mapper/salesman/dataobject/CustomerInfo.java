@@ -155,4 +155,14 @@ public class CustomerInfo {
      * 客户描述
      */
     private String desc;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
+
+    /**
+     * 创建时间
+     */
+    private String updateTime;
 }

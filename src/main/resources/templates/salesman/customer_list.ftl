@@ -31,7 +31,7 @@
                             <th>客户电话</th>
                             <th>接待销售</th>
                             <th>销售组长</th>
-
+                            <th>添加时间</th>
                         <#if identity==0>
                             <th colspan="3">客户信息</th>
                             <th colspan="2">客户追踪</th>
@@ -59,6 +59,7 @@
                                 <td>${dto.phone}</td>
                                 <td>${dto.salesmanName}</td>
                                 <td>${dto.salesmanLeaderName}</td>
+                                <td>${dto.createTime}</td>
                                 <#if identity==0>
                                     <td><a href="/crm/salesman/customerInfoDetail?id=${dto.id}">查看</a></td>
                                     <td><a href="/crm/salesman/toEditCustomer?id=${dto.id}">编辑</a></td>
