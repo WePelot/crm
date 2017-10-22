@@ -14,12 +14,7 @@ import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.dataobject.StatisticsResult;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.CustomerListPagePO;
-import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
+import com.pelot.mapper.salesman.query.*;
 
 import java.util.List;
 
@@ -105,7 +100,7 @@ public interface SalesmanMapper {
      * @param phone
      * @return
      */
-    SalesmanInfo getSalesmanInfoByPhone(String phone);
+    List<SalesmanInfo> getSalesmanInfoByPhone(String phone);
 
     /**
      * 根据用户名查询销售人员
@@ -136,7 +131,7 @@ public interface SalesmanMapper {
      * @param phone
      * @return
      */
-    CustomerInfo getCustomerInfoByPhone(String phone);
+    List<CustomerInfo> getCustomerInfoByPhone(String phone);
 
     /**
      * 添加客户信息

@@ -2,15 +2,15 @@ package com.pelot.controller.base;
 
 import com.pelot.constant.CookieConstant;
 import com.pelot.utils.CookieUtil;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  *基础的控制类
@@ -30,6 +30,46 @@ public class BaseController {
 
     public Cookie getToken() {
         return CookieUtil.get(getRequest(), CookieConstant.TOKEN);
+    }
+
+    /**
+     * 获取用户端的IP
+     */
+    public String getIP() {
+        HttpServletRequest request = getRequest();
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        if (ip == null) {
+            ip = "";
+        }
+        if ("127.0.0.1".equals(ip) || "localhost".equalsIgnoreCase(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
+            InetAddress addr;
+            try {
+                addr = InetAddress.getLocalHost();
+            } catch (UnknownHostException e) {
+                return null;
+            }
+            ip = addr.getHostAddress();
+        }
+
+        // 对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+        if (ip != null && ip.length() > 15 && ip.indexOf(",") > 0) {
+            // "***.***.***.***".length()
+            // = 15
+            ip = ip.substring(0, ip.indexOf(","));
+        }
+        return ip;
     }
 
     /**

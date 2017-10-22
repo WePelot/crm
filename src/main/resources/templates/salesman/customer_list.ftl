@@ -92,7 +92,7 @@
                         <li class="disabled"><a href="#">上一页</a></li>
                     <#else >
                         <li>
-                            <a href="/crm/salesman/list?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
+                            <a href="/crm/salesman/listCustomerInfo?pageNo=${currentPage -1}&pageSize=${size}&salesmanId=${salesmanId}">上一页</a>
                         </li>
                     </#if>
                     <#list 1..list.getTotalPage() as index>
@@ -100,7 +100,7 @@
                             <li class="disabled"><a href="#">${index}</a></li>
                         <#else >
                             <li class=><a
-                                    href="/crm/salesman/list?pageNo=${index}&pageSize=${size}&salesmanId=${salesmanId}">${index}</a>
+                                    href="/crm/salesman/listCustomerInfo?pageNo=${index}&pageSize=${size}&salesmanId=${salesmanId}">${index}</a>
                             </li>
                         </#if>
                     </#list>
@@ -108,7 +108,7 @@
                         <li class="disabled"><a href="#">下一页</a></li>
                     <#else >
                         <li>
-                            <a href="/crm/salesman/list?pageNo=${currentPage + 1}&pageSize=${size}&salesmanId=${salesmanId}">下一页</a>
+                            <a href="/crm/salesman/listCustomerInfo?pageNo=${currentPage + 1}&pageSize=${size}&salesmanId=${salesmanId}">下一页</a>
                         </li>
                     </#if>
                     </ul>

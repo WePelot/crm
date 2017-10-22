@@ -16,20 +16,13 @@ import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.dataobject.StatisticsResult;
-import com.pelot.mapper.salesman.query.ChgPwdDTO;
-import com.pelot.mapper.salesman.query.CustomerListPagePO;
-import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanInfoQueryPO;
-import com.pelot.mapper.salesman.query.SalesmanListPagePO;
-import com.pelot.mapper.salesman.query.SalesmanLoginPO;
-
-import java.util.List;
+import com.pelot.mapper.salesman.query.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 /**
  * @author hongcj
@@ -125,8 +118,11 @@ public class SalesmanManage {
     }
 
     public SalesmanInfo getSalesmanInfoByPhone(String phone) {
-        SalesmanInfo result = salesmanMapper.getSalesmanInfoByPhone(phone);
-        return result;
+        List<SalesmanInfo> result = salesmanMapper.getSalesmanInfoByPhone(phone);
+        if (!CollectionUtils.isEmpty(result)) {
+            return result.get(0);
+        }
+        return null;
     }
 
     /**
@@ -173,7 +169,12 @@ public class SalesmanManage {
      * @return
      */
     public CustomerInfo getCustomerInfoByPhone(String phone) {
-        return salesmanMapper.getCustomerInfoByPhone(phone);
+        List<CustomerInfo> result = salesmanMapper.getCustomerInfoByPhone(phone);
+        if (!CollectionUtils.isEmpty(result)) {
+            return result.get(0);
+        } else {
+            return null;
+        }
     }
 
     /**

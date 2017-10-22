@@ -6,7 +6,7 @@ create table `salesman_info` (
     `username` varchar(64) UNIQUE not null,
     `password` varchar(64) not null,
     `name` varchar(64) not null,
-    `phone` varchar(32) UNIQUE not null,
+    `phone` varchar(32) not null,
     `identity` int(3) not null comment '身份，0为普通销售，1为销售组长，2为总负责人',
     `belong` varchar(64) comment '所属于上级ID',
     `macaddr` VARCHAR(64) comment 'mac地址，总负责人时填写',
@@ -16,16 +16,18 @@ create table `salesman_info` (
     primary key (`id`)
 ) comment '销售人员信息表';
 
+--无macaddr地址时的sql
 INSERT INTO `salesman_info` VALUES(uuid(),'admin','crm889988','总监','15067189876',2,null,0, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP());
-
+--有mac地址时的sql
+INSERT INTO `salesman_info` VALUES(uuid(),'admin','crm889988','总监','15067189876',2,,''null,0, CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP());
 -- 客户信息表
 create table `customer_info` (
     `id` varchar(64) not null,
     `salesmanid` varchar(64) not null comment '所属销售',
     `receptiontime` timestamp not null comment '接待时间',
-    `company` varchar(64) not null comment '代理公司',
+    `company` varchar(64) comment '代理公司',
 		`name`  varchar(64) not null comment '姓名',
-    `phone` varchar(32) UNIQUE not null comment '客户电话',
+    `phone` varchar(32)  not null comment '客户电话',
 		`sex` int(3) not null comment '性别，1为男，2为女',
 		`agerange` varchar(32) comment '年龄区间',
 		`family_structure` varchar(32) comment '家庭结构',

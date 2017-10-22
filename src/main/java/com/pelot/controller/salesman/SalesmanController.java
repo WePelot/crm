@@ -5,11 +5,7 @@ import com.pelot.constant.CookieConstant;
 import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.exception.SalesmanException;
-import com.pelot.form.salesman.AddOrEditCustomerTrackInfoForm;
-import com.pelot.form.salesman.AddSalesmanInfoForm;
-import com.pelot.form.salesman.ChgPwdForm;
-import com.pelot.form.salesman.ChgSalesmanInfoForm;
-import com.pelot.form.salesman.CustomerInfoForm;
+import com.pelot.form.salesman.*;
 import com.pelot.mapper.common.PageQuery;
 import com.pelot.mapper.salesman.dataobject.CustomerInfo;
 import com.pelot.mapper.salesman.dataobject.CustomerTrackInfo;
@@ -19,31 +15,23 @@ import com.pelot.mapper.salesman.query.CustomerListPagePO;
 import com.pelot.mapper.salesman.query.CustomerTrackInfoListPagePO;
 import com.pelot.mapper.salesman.query.SalesmanListPagePO;
 import com.pelot.service.salesman.SalesmanService;
-import com.pelot.utils.AESUtil;
 import com.pelot.utils.CookieUtil;
 import com.pelot.utils.ResultVOUtil;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 销售人员的操作控制
@@ -318,7 +306,8 @@ public class SalesmanController extends BaseController {
         Map<String, Object> map) {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
-            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
+            //手机号码解密
+//            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
             map.put("customerInfo", customerInfo);
             map.put("currentId", customerInfo.getSalesmanId());
             List<SalesmanInfo> list = salesmanService.findAll();
@@ -349,15 +338,18 @@ public class SalesmanController extends BaseController {
             }
             if (StringUtils.isEmpty(info.getId())) {
                 //判断手机号码是否存在
+//                CustomerInfo customerInfoByPhone = salesmanService
+//                    .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 CustomerInfo customerInfoByPhone = salesmanService
-                    .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+                        .getCustomerInfoByPhone(info.getPhone());
                 if (Objects.nonNull(customerInfoByPhone)) {
                     map.put("errorMsg", "该手机号码已经存在，请重新输入");
                     map.put("redirectUrl", "/crm/salesman/toAddCustomer");
                     return new ModelAndView("common/error", map);
                 }
                 //为空，说明为新增
-                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+                //手机号码加密
+//                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 salesmanService.addCustomerInfo(info);
                 map.put("errorMsg", "添加成功");
             } else {
@@ -365,18 +357,22 @@ public class SalesmanController extends BaseController {
                 //先判断对应的id是否存在
                 CustomerInfo customerInfoById = salesmanService.getCustomerInfoById(info.getId());
                 //判断手机是否有修改
-                if (!customerInfoById.getPhone().equals(AESUtil.getInstance().encrypt(info.getPhone()))) {
+//                if (!customerInfoById.getPhone().equals(AESUtil.getInstance().encrypt(info.getPhone()))) {
+                if (!customerInfoById.getPhone().equals(info.getPhone())) {
                     //手机号相同，则为同一个人，无需判断手机号是否存在
                     //判断手机号码是否存在
+//                    CustomerInfo customerInfoByPhone = salesmanService
+//                        .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                     CustomerInfo customerInfoByPhone = salesmanService
-                        .getCustomerInfoByPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+                            .getCustomerInfoByPhone(info.getPhone());
                     if (Objects.nonNull(customerInfoByPhone)) {
                         map.put("errorMsg", "该手机号码已经存在，请重新输入");
                         map.put("redirectUrl", "/crm/salesman/toEditCustomer");
                         return new ModelAndView("common/error", map);
                     }
                 }
-                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
+                //手机号码加密
+//                info.setPhone(AESUtil.getInstance().encrypt(info.getPhone()));
                 salesmanService.editCustomerInfo(info);
                 map.put("errorMsg", "修改成功");
             }
@@ -398,7 +394,8 @@ public class SalesmanController extends BaseController {
     @GetMapping("/checkCustomerInfoByPhone")
     @ResponseBody
     public ResultVO checkCustomerInfoByPhone(@RequestParam String phone, @RequestParam String customerInfoId) {
-        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(AESUtil.getInstance().encrypt(phone));
+//        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(AESUtil.getInstance().encrypt(phone));
+        CustomerInfo customerInfoByPhone = salesmanService.getCustomerInfoByPhone(phone);
 
         if (Objects.isNull(customerInfoByPhone)) {
             return ResultVOUtil.success();
@@ -427,13 +424,14 @@ public class SalesmanController extends BaseController {
         po.setSalesmanId(getUserId());
         po.setIdentity(getIdentity());
         PageQuery<CustomerInfo> list = salesmanService.listCustomerInfo(po);
-        if (Objects.nonNull(list.getData())) {
-            list.getData().forEach(q -> {
-                if (q.getPhone() != null) {
-                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
-                }
-            });
-        }
+        //手机号解密
+//        if (Objects.nonNull(list.getData())) {
+//            list.getData().forEach(q -> {
+//                if (q.getPhone() != null) {
+//                    q.setPhone(AESUtil.getInstance().decrypt(q.getPhone()));
+//                }
+//            });
+//        }
         map.put("list", list);
         //在查询时会将page减1，所以这里需要加1
         map.put("currentPage", po.getPageNo() + 1);
@@ -477,7 +475,8 @@ public class SalesmanController extends BaseController {
         Map<String, Object> map) {
         try {
             CustomerInfo customerInfo = salesmanService.getCustomerInfoById(id);
-            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
+            //手机号码解密
+//            customerInfo.setPhone(AESUtil.getInstance().decrypt(customerInfo.getPhone()));
             SalesmanInfo salesmanInfo = salesmanService.getSalesmanInfoWithLeadById(customerInfo.getSalesmanId());
             map.put("customerInfo", customerInfo);
             map.put("salesmanName", salesmanInfo.getName());

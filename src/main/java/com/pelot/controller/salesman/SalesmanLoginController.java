@@ -8,35 +8,30 @@
 package com.pelot.controller.salesman;
 
 import com.pelot.constant.CookieConstant;
+import com.pelot.controller.base.BaseController;
 import com.pelot.enums.ResultEnum;
 import com.pelot.enums.SalesmanInfoIdentityEnum;
-import com.pelot.exception.SalesmanException;
 import com.pelot.mapper.salesman.dataobject.SalesmanInfo;
 import com.pelot.mapper.salesman.query.SalesmanLoginPO;
 import com.pelot.service.salesman.SalesmanLoginService;
 import com.pelot.service.salesman.SalesmanService;
 import com.pelot.utils.CookieUtil;
-import com.pelot.utils.MacUtil;
-
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * 销售人员登录
@@ -48,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/user")
 @Slf4j
-public class SalesmanLoginController {
+public class SalesmanLoginController extends BaseController {
 
     @Autowired
     private SalesmanLoginService salesmanLoginService;
@@ -75,18 +70,18 @@ public class SalesmanLoginController {
             //如果是管理员的话，需要判断mac地址是否正确
             if (SalesmanInfoIdentityEnum.HEAD_CHARGE.getCode().equals(salesmanInfo.getIdentity())) {
                 //获取mac地址
-                try {
-                    String macAddr = MacUtil.getMacAddr(request);
-                    if (StringUtils.isEmpty(macAddr) || !macAddr.equals(salesmanInfo.getMacAddr())) {
-                        //用户名和密码不正确，转入错误页面
-                        map.put("errorMsg", "mac地址不匹配");
-                        map.put("redirectUrl", "/crm/html/salesman/login.html");
-                        return new ModelAndView("common/error", map);
-                    }
-                } catch (Exception e) {
-                    log.error("获取客户端mac地址出错", e);
-                    throw new SalesmanException(ResultEnum.GET_MACADDR_FAIL);
-                }
+//                try {
+//                    String macAddr = MacUtil.getMacAddr(getIP());
+//                    if (StringUtils.isEmpty(macAddr) || !macAddr.equals(salesmanInfo.getMacAddr())) {
+//                        //用户名和密码不正确，转入错误页面
+//                        map.put("errorMsg", "mac地址不匹配");
+//                        map.put("redirectUrl", "/crm/html/salesman/login.html");
+//                        return new ModelAndView("common/error", map);
+//                    }
+//                } catch (Exception e) {
+//                    log.error("获取客户端mac地址出错", e);
+//                    throw new SalesmanException(ResultEnum.GET_MACADDR_FAIL);
+//                }
             }
 
         } else {
